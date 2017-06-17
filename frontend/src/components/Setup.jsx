@@ -29,7 +29,7 @@ export default class Setup extends Component {
 
         return (
                     <Dialog
-                        title="Dialog With Actions"
+                        title="Start a new project!"
                         actions={actions}
                         modal={false}
                         open={true}

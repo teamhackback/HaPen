@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
-//import logo from '../assets/logo.svg';
+import logo from '../assets/logo.svg';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
 import AppBar from 'material-ui/AppBar';
 import Setup from './Setup';
 import './App.scss';
@@ -13,7 +15,11 @@ class App extends Component {
                 <div className="App">
 
 
-                    <AppBar title="HaPen"/>
+                    <AppBar
+                        title="HaPen"
+                        iconElementLeft={<img src={logo} className="logo" alt="HaPen logo"/>}
+                        iconElementRight={<FlatButton label="Login" />}
+                    />
 
                     <Setup/>
 
