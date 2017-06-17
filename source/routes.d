@@ -45,13 +45,19 @@ void registerAppRoutes(scope URLRouter router)
 
     // TODO: how to initialize controllers?
     import controllers.user : UserController, users;
+    logInfo("User");
     users = new UserController(mongoDB);
 
     import services.offers : Offers;
 
     import hb.web.web : registerWebInterface, WebInterfaceSettings;
+    logInfo("User2");
     auto userServiceSettings = new WebInterfaceSettings();
+    logInfo("User3");
     userServiceSettings.urlPrefix = "/api";
+    logInfo("User4");
     userServiceSettings.ignoreTrailingSlash = true; // true: overloads for trailing /
+    logInfo("User4");
     router.registerWebInterface(new Offers(mongoDB), userServiceSettings);
+    logInfo("User5");
 }
