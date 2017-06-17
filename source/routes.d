@@ -8,6 +8,7 @@ void registerAppRoutes(scope URLRouter router)
     import hb.web.rest : registerRestInterface;
     import hb.web.web : registerWebInterface;
     import vibe.db.mongo.mongo : connectMongoDB;
+    import vibe.db.mongo.settings : MongoClientSettings, parseMongoDBUrl;
 
     with(router) {
         get("/api/session", (req, res) {
@@ -22,13 +23,15 @@ void registerAppRoutes(scope URLRouter router)
     }
 
     // TODO: parse mongo url properly here
-    auto host = environment.get("APP_MONGO_URL", "mongodb://localhost");
-    logInfo("Mongo.Connect: %s", host);
-    auto dbName = environment.get("APP_MONGO_DB", "hackback");
-    logInfo("Mongo.Open: %s", dbName);
-    auto mongoInstance = connectMongoDB(host);
-    logInfo("Mongo.Instance: %s", mongoInstance);
-    auto mongoDB = mongoInstance.getDatabase(dbName);
+    MongoClientSettings mongoSettings;
+    auto mongoUrl = environment.get("APP_MONGO_URL", "mongodb://localhost");
+    logInfo("Mongo.Connect: %s", mongoUrl);
+    parseMongoDBUrl(mongoSettings, mongoUrl);
+
+    logInfo("Mongo.Open: %s", mongoSettings);
+    auto mongoInstance = connectMongoDB(mongoSettings);
+    logInfo("Mongo.Instance: %s", mongoSettings.database);
+    auto mongoDB = mongoInstance.getDatabase(mongoSettings.database);
 
     // TODO: how to initialize controllers?
     import controllers.user : UserController, users;
