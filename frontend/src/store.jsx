@@ -9,11 +9,17 @@ class ObservableAppStore {
     @observable user = null;
     @observable projects_bar = false;
     @observable project_current = 0;
+    @observable project_new = {
+        name: '',
+        type: '',
+        language: '',
+        events: []
+    };
     @observable projects = [
         {
-            name: null,
-            type: null,
-            language: null,
+            name: 'Foo',
+            type: 'Mobile app',
+            language: 'Java',
             events: []
         }, {
             name: 'HaPen',
@@ -74,6 +80,24 @@ class ObservableAppStore {
         this.project_current = project_current;
     }
 
+    setNewProjectKey(key,value) {
+        this.project_new[key]=value;
+    }
+    commitNewProject(key,value) {
+        this.projects.push(this.project_new);
+        this.cancelNewProject();
+    }
+    cancelNewProject() {
+        this.project_new=null;
+    }
+    createNewProject() {
+        this.project_new={
+            name: '',
+            type: '',
+            language: '',
+            events: []
+        };
+    }
     setCurrentProjectKey(key,value) {
         this.currentProject[key]=value;
     }

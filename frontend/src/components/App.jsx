@@ -8,6 +8,7 @@ import AppBar from 'material-ui/AppBar';
 import Projects from './Projects';
 //import Timeline from './Timeline';
 import Setup from './Setup';
+import Project from './Project';
 import './App.scss';
 
 @observer
@@ -25,14 +26,20 @@ class App extends Component {
                     <AppBar
                         title="HaPen"
                         iconElementLeft={<img src={logo} className="logo" alt="HaPen logo"/>}
-                        iconElementRight={<FlatButton label="Projects" onClick={()=>store.toggleProjectsBar()} />}
+                        iconElementRight={<div>
+
+                            <FlatButton label="Projects" onClick={()=>store.toggleProjectsBar()} />
+                            <FlatButton label="New Project" onClick={()=>store.createNewProject()} />
+
+
+                        </div>}
                     />
 
                      {/*<Timeline store={store}/>*/}
 
 
-                    {store.projects_bar?<Projects store={store}/>:undefined}
-                    {store.currentProject?<Setup store={store}/>:undefined}
+                    {store.projects_bar?<Projects store={store}/>:<Project store={store}/>}
+                    {store.project_new?<Setup store={store}/>:undefined}
 
 
                     {/*<nav className="top">

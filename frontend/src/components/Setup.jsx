@@ -24,35 +24,37 @@ export default class Setup extends Component {
 
 
         if (store.step_current === 0) {
-            cantGoNext = !store.currentProject.name;//todo better
+            cantGoNext = !store.project_new.name;//todo better
             stepContent = (
                 <TextField
+                    key="name"
                     floatingLabelText="Project name"
-                    defaultValue={store.currentProject.name}
-                    onChange={(event, value)=>store.setCurrentProjectKey('name', value)}
+                    defaultValue={store.project_new.name}
+                    onChange={(event, value)=>store.setNewProjectKey('name', value)}
                 />
             );
         } else if (store.step_current === 1) {
-            cantGoNext = !store.currentProject.type;//todo better
+            cantGoNext = !store.project_new.type;//todo better
             stepContent = (
 
                 <AutoComplete
+                    key="type"
                     dataSource={PROJECT_TYPES}
                     floatingLabelText="Project type"
-                    defaultValue={store.currentProject.type}
-                    onUpdateInput={(event, value)=>store.setCurrentProjectKey('type', value)}
+                    defaultValue={store.project_new.type}
+                    onUpdateInput={(event, value)=>store.setNewProjectKey('type', value)}
                 />
             );
         } else if (store.step_current === 2) {
-            cantGoNext = !store.currentProject.language;//todo better
+            cantGoNext = !store.project_new.language;//todo better
             stepContent = (
 
-
                 <AutoComplete
+                    key="language"
                     dataSource={PROJECT_LANGUAGES}
                     floatingLabelText="Project language"
-                    defaultValue={store.currentProject.language}
-                    onUpdateInput={(event, value)=>store.setCurrentProjectKey('language', value)}
+                    defaultValue={store.project_new.language}
+                    onUpdateInput={(event, value)=>store.setNewProjectKey('language', value)}
                 />
             );
         }
@@ -77,7 +79,7 @@ export default class Setup extends Component {
             <FlatButton
                 label="Cancel"
                 primary={false}
-                onClick={()=>store.setCurrentProject(-1)}
+                onClick={()=>store.cancelNewProject()}
             />,
             <FlatButton
                 label="Previous"
@@ -93,14 +95,14 @@ export default class Setup extends Component {
                 hoverColor="#8AA62F"
                 style={{color: 'white'}}
                 keyboardFocused={true}
-                onClick={()=>store.step_current === 2 ?store.setCurrentProject(-1):store.nextStep()/*todo why thare is working onClick not onTouchTap???*/}
+                onClick={()=>store.step_current === 2 ?store.commitNewProject():store.nextStep()/*todo why thare is working onClick not onTouchTap???*/}
             />,
         ];
 
 
         return (
             <Dialog
-                title={`Start a new project ${store.currentProject.name || ''}!`}
+                title={`Start a new project ${store.project_new.name || ''}!`}
                 actions={actions}
                 modal={false}
                 open={true}
