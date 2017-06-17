@@ -14,6 +14,7 @@ shared static this()
 
 void githubHook(HTTPServerRequest req, HTTPServerResponse res)
 {
+    import std.stdio;
     auto json = verifyRequest(req.headers["X-Hub-Signature"], req.bodyReader.readAllUTF8);
     switch (req.headers["X-GitHub-Event"])
     {
@@ -48,7 +49,6 @@ auto getSignature(string data)
     import std.string : representation;
 
     import std.stdio;
-    hookSecret.writeln;
     auto hmac = HMAC!SHA1(hookSecret.representation);
     hmac.put(data.representation);
     return hmac.finish.toHexString!(LetterCase.lower);
@@ -59,8 +59,6 @@ Json verifyRequest(string signature, string data)
     import std.exception : enforce;
     import std.string : chompPrefix;
 
-    import std.stdio;
-    getSignature(data).writeln;
     enforce(getSignature(data) == signature.chompPrefix("sha1="),
             "Hook signature mismatch");
     return parseJsonString(data);
