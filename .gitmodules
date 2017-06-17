@@ -1,0 +1,3 @@
+[submodule "hb-web"]
+	path = hb-web
+	url = https://github.com/teamhackback/hb-web
