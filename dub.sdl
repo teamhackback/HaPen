@@ -7,7 +7,7 @@ dependency "vibe-d:data" path="vendor/vibed"
 dependency "vibe-d:http" path="vendor/vibed"
 dependency "vibe-d:mongodb" path="vendor/vibed"
 dependency "vibe-d:redis" path="vendor/vibed"
-dependency "oauth" version="~>0.2.0-beta.2"
+dependency "oauth" path="vendor/oauth"
 dependency "hb-web" version="~>0.0.1"
 /*subConfiguration "vibe-d:core" "vibe-core"*/
 postBuildCommands "./scripts/build_frontend.sh"

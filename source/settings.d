@@ -1,4 +1,5 @@
 import vibe.http.server : HTTPServerOption, HTTPServerSettings;
+import vibe.core.log;
 
 HTTPServerSettings loadSettings()
 {
@@ -24,6 +25,7 @@ HTTPServerSettings loadSettings()
 
     //settings.sessionStore = new MemorySessionStore;
     auto redisUrl = environment.get("APP_REDIS_URL", "localhost");
+    logInfo("RedisUrl: %s", redisUrl);
     auto redisDb = environment.get("APP_REDIS_DB", "0").to!long;
 
     auto redisInstance = connectRedisDB(redisUrl);
