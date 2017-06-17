@@ -9,16 +9,22 @@ class ObservableAppStore {
     @observable user = null;
     @observable projects_bar = false;
     @observable project_current = 0;
+    @observable project_new = {
+        name: '',
+        type: '',
+        language: '',
+        events: []
+    };
     @observable projects = [
         {
-            name: null,
-            type: null,
-            language: null,
+            name: 'Foo',
+            type: 'Mobile app',
+            language: 'Java',
             events: []
         }, {
-            name: null,
-            type: null,
-            language: null,
+            name: 'HaPen',
+            type: 'Web app',
+            language: 'D, JavaScript',
             events: [{
                     type: 'COMMIT',
                     message: 'hello HaPen',
@@ -39,6 +45,7 @@ class ObservableAppStore {
     @computed
     get
     currentProject() {
+        if(this.project_current===-1)return null;
         return this.projects[this.project_current];
     }
 
@@ -57,17 +64,42 @@ class ObservableAppStore {
     }
 
     nextStep(task) {
-        console.log('nextStep');
         this.step_current++;
+    }
+
+    previousStep(task) {
+        this.step_current--;
     }
 
     toggleProjectsBar() {
         this.projects_bar=!this.projects_bar;
     }
 
+    setCurrentProject(project_current){
+        this.projects_bar=false;
+        this.project_current = project_current;
+    }
 
-    setCurrentProjectName(name) {
-        this.currentProject.name=name;
+    setNewProjectKey(key,value) {
+        this.project_new[key]=value;
+    }
+    commitNewProject(key,value) {
+        this.projects.push(this.project_new);
+        this.cancelNewProject();
+    }
+    cancelNewProject() {
+        this.project_new=null;
+    }
+    createNewProject() {
+        this.project_new={
+            name: '',
+            type: '',
+            language: '',
+            events: []
+        };
+    }
+    setCurrentProjectKey(key,value) {
+        this.currentProject[key]=value;
     }
 
 
