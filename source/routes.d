@@ -1,5 +1,6 @@
 import vibe.http.router : URLRouter;
 import vibe.data.json : Json;
+import vibe.core.log;
 
 void registerAppRoutes(scope URLRouter router)
 {
@@ -21,6 +22,7 @@ void registerAppRoutes(scope URLRouter router)
     }
 
     auto host = environment.get("APP_MONGO_URL", "mongodb://localhost");
+    logInfo("Trying to connect to %s", host);
     auto dbName = environment.get("APP_MONGO_DB", "hackback");
     auto db = connectMongoDB(host).getDatabase(dbName);
 
