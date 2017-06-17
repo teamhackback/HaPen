@@ -58,6 +58,7 @@ class ObservableAppStore {
                 events.push({
                     type:event.type,
                     message:event.message,
+                    date:event.date,
                     project
                 })
 
