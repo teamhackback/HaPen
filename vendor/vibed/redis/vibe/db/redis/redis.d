@@ -63,7 +63,7 @@ auto connectRedisDB(string url)
 	// https://www.iana.org/assignments/uri-schemes/prov/redis
 	// example: redis://user:secret@localhost:6379/0?foo=bar&qux=baz
 	import std.stdio;
-	"before skip";
+	"before skip".writeln;
 	url.writeln;
 	assert(url.skipOver("redis://"), "Invalid redis Url scheme");
 	url.writeln;
