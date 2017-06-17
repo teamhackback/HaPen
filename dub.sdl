@@ -8,7 +8,7 @@ dependency "vibe-d:http" version="~>0.7.31"
 dependency "vibe-d:mongodb" version="~>0.7.31"
 dependency "vibe-d:redis" version="~>0.7.31"
 dependency "oauth" version="~>0.2.0-beta.2"
-dependency "hb-web" path="./hb-web"
+dependency "hb-web" version="~>0.0.1"
 subConfiguration "vibe-d:core" "vibe-core"
 /* Experimental configurations */
 /*subConfiguration "vibe-d:core" "libasync"*/
