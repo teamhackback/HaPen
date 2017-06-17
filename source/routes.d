@@ -13,12 +13,7 @@ void registerAppRoutes(scope URLRouter router)
     import github : githubHook;
 
     with(router) {
-        get("/api/session", (req, res) {
-            if (req.session.isKeySet("user"))
-                res.writeJsonBody(req.session.get!Json("user"));
-            else
-                res.writeBody("Empty Session");
-        });
+
         post("/api/github_hook", &githubHook);
     }
 
