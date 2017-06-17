@@ -62,23 +62,18 @@ auto connectRedisDB(string url)
 	import std.algorithm, std.range;
 	// https://www.iana.org/assignments/uri-schemes/prov/redis
 	// example: redis://user:secret@localhost:6379/0?foo=bar&qux=baz
-	import std.stdio;
-	"before skip".writeln;
 	url.skipOver("redis://");
 	auto ps = url.splitter(":");
-	ps.writeln;
-	ps.walkLength.writeln;
+	import std.stdio;
 	// has password
 	RedisConfig config;
 	if (ps.walkLength == 3)
 	{
 		config.user = ps.front;
 		ps.popFront;
-		ps.writeln;
 		config.password = ps.front.until("@").to!string;
 		config.server = ps.front[config.password.length + 1.. $];
 		ps.popFront;
-		ps.writeln;
 		auto endBits = ps.front.splitter("/");
 		config.port = endBits.front.to!ushort;
 		//endBits.popFront;
