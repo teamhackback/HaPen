@@ -48,6 +48,59 @@ RedisDatabase connectRedisDB(URL url)
 	return cli.getDatabase(url.localURI[1 .. $].to!long);
 }
 
+struct RedisConfig
+{
+	string user;
+	string password;
+	string server;
+	ushort port = RedisClient.defaultPort;
+	long database;
+}
+
+auto connectRedisDB(string url)
+{
+	import std.algorithm, std.range;
+	// https://www.iana.org/assignments/uri-schemes/prov/redis
+	// example: redis://user:secret@localhost:6379/0?foo=bar&qux=baz
+	assert(url.skipOver("redis://"), "Invalid redis Url scheme");
+	auto ps = url.splitter(":");
+	// has password
+	RedisConfig config;
+	if (ps.walkLength == 3)
+	{
+		config.user = ps.front;
+		ps.popFront;
+		config.password = ps.front.until("@").to!string;
+		config.server = ps.front[config.password.length + 1.. $];
+		ps.popFront;
+		auto endBits = ps.front.splitter("/");
+		config.port = endBits.front.to!ushort;
+		//endBits.popFront;
+		//auto nr = endBits.front.until("?");
+	}
+	else
+	{
+		config.server = ps.front;
+	}
+	import std.stdio;
+	writeln("config", config);
+	auto client = new RedisClient(config.server, config.port);
+	if (config.password.length > 0)
+	{
+		writeln("trying auth");
+		client.auth(config.password);
+		writeln("finished auth");
+	}
+	return client;
+}
+
+unittest
+{
+	//import std.stdio;
+	//string url = "redis://user:password@foo.server.bar.com:12345";
+	//url.connectRedisDB.writeln;
+}
+
 /**
 	A redis client with connection pooling.
 */

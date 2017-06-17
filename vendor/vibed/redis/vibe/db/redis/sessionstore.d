@@ -26,6 +26,11 @@ final class RedisSessionStore : SessionStore {
 		m_db = connectRedis(host, port).getDatabase(database);
 	}
 
+	this(RedisClient client, long database)
+	{
+		m_db = client.getDatabase(database);
+	}
+
 	/** The duration without access after which a session expires.
 	*/
 	@property Duration expirationTime() const { return m_expirationTime; }
