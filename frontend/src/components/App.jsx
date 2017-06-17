@@ -28,6 +28,7 @@ class App extends Component {
                         iconElementLeft={<img src={logo} className="logo" alt="HaPen logo"/>}
                         iconElementRight={<div>
 
+                            <FlatButton label="Timeline" onClick={()=>store.setCurrentProject(-1)} />
                             <FlatButton label="Projects" onClick={()=>store.toggleProjectsBar()} />
                             <FlatButton label="New Project" onClick={()=>store.createNewProject()} />
 

@@ -66,7 +66,6 @@ createChart()
 
 }*/
 
-
 @observer
 export default class Project extends Component {
     render() {
