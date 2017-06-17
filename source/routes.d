@@ -10,6 +10,8 @@ void registerAppRoutes(scope URLRouter router)
     import vibe.db.mongo.mongo : connectMongoDB;
     import vibe.db.mongo.settings : MongoClientSettings, MongoAuthMechanism, parseMongoDBUrl;
 
+    import github : githubHook;
+
     with(router) {
         get("/api/session", (req, res) {
             if (req.session.isKeySet("user"))
@@ -17,10 +19,7 @@ void registerAppRoutes(scope URLRouter router)
             else
                 res.writeBody("Empty Session");
         });
-        post("/api/github_hook", (req, res) {
-            logInfo("GH-req: %s", req);
-            logInfo("JSON: %s", req.json);
-        });
+        post("/api/github_hook", &githubHook);
         get("/", (req, res) {
             res.writeBody("Hello Scalingo...");
         });

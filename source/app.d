@@ -11,7 +11,7 @@ shared static this()
     import settings : loadSettings;
 
     import vibe.core.log;
-    setLogLevel(LogLevel.debug_);
+    setLogLevel(LogLevel.info);
 
     auto router = new URLRouter;
 
