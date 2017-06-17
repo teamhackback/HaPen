@@ -23,6 +23,7 @@ void registerAppRoutes(scope URLRouter router)
 
         post("/api/github_hook", (req, res) {
             logInfo("GH-req: %s", req);
+            logInfo("JSON: %s", req.json);
         });
     }
 
