@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {observer} from 'mobx-react';
 import logo from '../assets/logo.svg';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import FlatButton from 'material-ui/FlatButton';
@@ -7,8 +8,12 @@ import AppBar from 'material-ui/AppBar';
 import Setup from './Setup';
 import './App.scss';
 
+@observer
 class App extends Component {
     render() {
+
+
+        const store = this.props.store;
 
        return (
             <MuiThemeProvider>
@@ -21,7 +26,7 @@ class App extends Component {
                         iconElementRight={<FlatButton label="Login" />}
                     />
 
-                    <Setup/>
+                    <Setup store={store}/>
 
 
                     {/*<nav className="top">
