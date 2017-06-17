@@ -12,8 +12,7 @@ import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import IconMenu from 'material-ui/IconMenu';
-import MenuItem from 'material-ui/MenuItem';
-
+import {List, ListItem} from 'material-ui/List';
 
 @observer
 export default class Timeline extends Component {
@@ -23,18 +22,28 @@ export default class Timeline extends Component {
 
         return (
             <List>
-                <ListItem
-                    //leftAvatar={<Avatar src="images/raquelromanp-128.jpg" />}
-                    //rightIconButton={rightIconMenu}
-                    primaryText="Raquel Parrado"
-                    secondaryText={
-                        <p>
-                            <span style={{color: darkBlack}}>Recipe to try</span><br />
-                            We should eat this: grated squash. Corn and tomatillo tacos.
-                        </p>
-                    }
-                    secondaryTextLines={2}
-                />
+
+
+                {store.events.map((event,index)=>(
+                    <ListItem
+                        key={index}
+                        //leftAvatar={<Avatar src="images/raquelromanp-128.jpg" />}
+                        //rightIconButton={rightIconMenu}
+                        primaryText={event.type+' | '+event.project.name}
+                        secondaryText={
+                            <p>
+                                {event.project.message}
+                            </p>
+                        }
+                        secondaryTextLines={2}
+                    />
+
+
+
+                ))}
+
+
+
             </List>
 
         )
