@@ -21,7 +21,7 @@ void registerAppRoutes(scope URLRouter router)
             res.writeBody("Hello Scalingo...");
         });
 
-        get("/api/github_hook", (req, res) {
+        post("/api/github_hook", (req, res) {
             logInfo("GH-req: %s", req);
         });
     }
