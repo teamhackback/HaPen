@@ -1,0 +1,15 @@
+﻿{
+  "name" : "facebook-login-example",
+  "dependencies" : {
+    "oauth" : {
+      "path" : "..\/..\/"
+    },
+    "vibe-d:http" : "*",
+    "vibe-d:core" : "*",
+    "vibe-d:data" : "*",
+    "vibe-d:web" : "*"
+  },
+  "versions" : [
+    "VibeDefaultMain"
+  ]
+}
