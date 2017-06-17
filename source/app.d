@@ -43,6 +43,7 @@ shared static this()
     router.registerOAuth;
     router.registerAppRoutes();
 
+    /*
     // frontend
     router.get("*", serveStaticFiles("frontend/build"));
 
@@ -52,13 +53,14 @@ shared static this()
         res.writeBody("Invalid API route");
     });
     router.get("*", serveStaticFile("frontend/build/index.html"));
+    */
 
     HTTPClient.setUserAgentString("Awesome D");
     listenHTTP(loadSettings, router);
 
-    foreach (route; router.getAllRoutes)
-    {
-        if ([HTTPMethod.POST, HTTPMethod.GET, HTTPMethod.PUT].canFind(route.method))
-            logDebug("%s: %s", route.pattern, route.method);
-    }
+    //foreach (route; router.getAllRoutes)
+    //{
+        //if ([HTTPMethod.POST, HTTPMethod.GET, HTTPMethod.PUT].canFind(route.method))
+            //logDebug("%s: %s", route.pattern, route.method);
+    //}
 }
