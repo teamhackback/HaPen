@@ -64,15 +64,20 @@ auto connectRedisDB(string url)
 	// example: redis://user:secret@localhost:6379/0?foo=bar&qux=baz
 	assert(url.skipOver("redis://"), "Invalid redis Url scheme");
 	auto ps = url.splitter(":");
+	import std.stdio;
+	ps.writeln;
+	ps.walkLength.writeln;
 	// has password
 	RedisConfig config;
 	if (ps.walkLength == 3)
 	{
 		config.user = ps.front;
 		ps.popFront;
+		ps.writeln;
 		config.password = ps.front.until("@").to!string;
 		config.server = ps.front[config.password.length + 1.. $];
 		ps.popFront;
+		ps.writeln;
 		auto endBits = ps.front.splitter("/");
 		config.port = endBits.front.to!ushort;
 		//endBits.popFront;
@@ -82,7 +87,6 @@ auto connectRedisDB(string url)
 	{
 		config.server = ps.front;
 	}
-	import std.stdio;
 	writeln("config", config);
 	auto client = new RedisClient(config.server, config.port);
 	if (config.password.length > 0)
