@@ -39,6 +39,7 @@ void registerAppRoutes(scope URLRouter router)
     // scramSHA1
     mongoSettings.authMechanism = MongoAuthMechanism.scramSHA1;
 
+    logInfo("Mongo.Open");
     auto mongoInstance = connectMongoDB(mongoSettings);
     logInfo("Mongo.Instance: %s", mongoSettings.database);
     auto mongoDB = mongoInstance.getDatabase(mongoSettings.database);
