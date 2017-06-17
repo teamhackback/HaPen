@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {observer} from 'mobx-react';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import {
@@ -11,9 +12,11 @@ import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 
-
+@observer
 export default class Setup extends Component {
     render() {
+
+        const store = this.props.store;
 
         const actions = [
             <FlatButton
@@ -25,7 +28,7 @@ export default class Setup extends Component {
                 label="Submit"
                 primary={true}
                 keyboardFocused={true}
-                onTouchTap={this.handleClose}
+                onTouchTap={()=>store.nextStep()}
             />,
         ];
 
@@ -40,7 +43,7 @@ export default class Setup extends Component {
                     >
 
 
-                        <Stepper activeStep={0}>
+                        <Stepper activeStep={store.step}>
                             <Step>
                                 <StepLabel>Select project name</StepLabel>
                             </Step>
