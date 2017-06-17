@@ -21,6 +21,7 @@ import std.array : join;
 import std.datetime : Clock, hours, SysTime;
 import std.exception : enforce;
 import std.format : format;
+import vibe.core.log;
 
 immutable(OAuthSettings)[] loadConfig(string path)
 {
@@ -137,6 +138,7 @@ class OAuthSettings
         import std.digest.sha : sha256Of;
         assert(this.provider !is null, "Invalid provider selected");
         this.hash = sha256Of(provider.tokenUri ~ ' ' ~ clientId).idup;
+        logInfo("hash: %s", this.hash);
     }
 
     /++
@@ -287,6 +289,8 @@ class OAuthSettings
             params["scope"] = ld.scopes;
 
         auto session = new OAuthSession(this, params);
+
+        logInfo("Saving session.");
         session.save(httpSession);
         return session;
     }
@@ -387,8 +391,9 @@ class OAuthSettings
             ulong[] data64 = cast(ulong[])(data[0 .. 16]);
             data64[0] = this.timestamp.toUnixTime;
             data64[1] = this.randomId;
-            data[16 .. 20] = crc32Of(this.scopes);
-            return sha256Of(data[]);
+            data[16 .. 20] = crc32Of(this.scopes).dup;
+            logInfo("key: %s", (data[]).sha256Of);
+            return sha256Of(data[]).idup;
         }
     }
 }

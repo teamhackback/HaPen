@@ -7,6 +7,7 @@ import vibe.http.router : URLRouter;
 import vibe.http.client : requestHTTP;
 import vibe.http.server : HTTPServerRequest, HTTPServerResponse;
 import vibe.data.json : Json;
+import vibe.core.log;
 
 OAuthWebapp webapp;
 immutable(OAuthSettings) githubOAuthSettings;
@@ -55,13 +56,12 @@ import controllers.user : users;
 
 bool isLoggedIn(scope HTTPServerRequest req) @safe {
     if (webapp.isLoggedIn(req, githubOAuthSettings))
-        return true;
+        if (req.session && req.session.isKeySet("user"))
+            return true;
     return false;
     //if (!req.session)
         //return false;
 
-    //if (req.session.isKeySet("user") && )
-        //return true;
 
     //return false;
 }
@@ -109,10 +109,16 @@ void registerOAuth(scope URLRouter router)
         // TODO: necessary?
         if (isLoggedIn(req))
         {
+            logInfo("Already logged in- redirecting to final page.");
             return res.redirect(finalRedirectUri);
         }
         else if (webapp.login(req, res, githubOAuthSettings, githubScopes))
         {
+            //if (!isLoggedIn(req))
+            //{
+                //logInfo("Error happened");
+                //res.writeBody("Error happened");
+            //}
             auto session = webapp.oauthSession(req);
             assert (session, "No session: authenticate() not called??");
 
@@ -151,8 +157,6 @@ void registerOAuth(scope URLRouter router)
                             res.redirect(finalRedirectUri);
                         });
                 });
-        } else {
-            writeln("error");
         }
     });
 }

@@ -11,6 +11,7 @@ import oauth.settings : OAuthSettings;
 import oauth.session : OAuthSession;
 
 import vibe.http.server : HTTPServerRequest, HTTPServerResponse;
+import vibe.core.log;
 
 version (Have_vibe_d_web) {
     import vibe.web.web : noRoute;
@@ -47,7 +48,10 @@ class OAuthWebapp
         } ();
 
         if (!req.session)
+        {
+            logInfo("No req.session");
             return false;
+        }
 
         if (auto session =
             settings ? OAuthSession.load(settings, req.session) : null)
@@ -58,6 +62,7 @@ class OAuthWebapp
 
             return true;
         }
+        logInfo("No OAuth session");
 
         return false;
     }
@@ -91,11 +96,12 @@ class OAuthWebapp
         scope HTTPServerResponse res,
         immutable OAuthSettings settings,
         in string[string] extraParams,
-        in string[] scopes = null) @safe
+        in string[] scopes = null) @trusted
     {
         // redirect from the authentication server
         if (req.session && "code" in req.query && "state" in req.query)
         {
+            logInfo("Received request from authentication server");
             // For assert in oauthSession method
             version(assert) () @trusted {
                 req.context["oauth.debug.login.checked"] = true;
@@ -103,11 +109,16 @@ class OAuthWebapp
 
             auto session = settings.userSession(
                 req.session, req.query["state"], req.query["code"]);
+            () @trusted {
+                req.context["oauth.session"] = session;
+            } ();
 
+            logInfo("Login successful.");
             return true;
         }
         else
         {
+            logInfo("Sending user to authentication server");
             if (!req.session)
                 req.session = res.startSession();
 
@@ -152,6 +163,7 @@ class OAuthWebapp
     }
     body
     {
+        logInfo("req.context: %s", "oauth.session" in req.context);
         try
             if (auto pCM = "oauth.session" in req.context)
                 return pCM.get!OAuthSession;

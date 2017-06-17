@@ -45,14 +45,23 @@ class OAuthSession
         immutable OAuthSettings settings,
         scope Session httpSession)
     {
+        logInfo("Trying to load session");
         if (!httpSession.isKeySet("oauth.session"))
+        {
+            logInfo("Warning: no key oauth.session found in session");
             return null;
+        }
 
         auto data = httpSession.get!(SaveData)("oauth.session");
         auto session = new OAuthSession(settings, data);
+        logInfo("session.sign: %s", session.signature);
+        logInfo("data.sign: %s", data.signature);
 
         if (session.signature != data.signature)
+        {
+            logInfo("Warning: signature mismatch");
             return null;
+        }
         //enforce!OAuthException(session.signature == data.signature,
             //"Failed to load session: signature mismatch.");
 
@@ -328,6 +337,7 @@ class OAuthSession
                    cast(ubyte[]) (this.classinfo.name ~ ": " ~
                    _tokenData.toString());
         }();
+        logInfo("sign: %s", base.sha256Of.toHexString.idup);
 
         // TODO: for some reason the allocated string is GC collected and points
         // to garbage (hence the need for .dup)
