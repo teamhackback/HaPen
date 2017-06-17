@@ -20,9 +20,6 @@ void registerAppRoutes(scope URLRouter router)
                 res.writeBody("Empty Session");
         });
         post("/api/github_hook", &githubHook);
-        get("/", (req, res) {
-            res.writeBody("Hello Scalingo...");
-        });
     }
 
     // TODO: parse mongo url properly here
