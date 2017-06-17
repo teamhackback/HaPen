@@ -30,7 +30,9 @@ class App extends Component {
 
                     {/*<Projects store={store}/>
                     <Timeline store={store}/>*/}
-                    <Setup store={store}/>
+
+
+                    {store.currentProject?<Setup store={store}/>:undefined}
 
 
                     {/*<nav className="top">

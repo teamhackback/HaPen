@@ -39,6 +39,7 @@ class ObservableAppStore {
     @computed
     get
     currentProject() {
+        if(this.project_current===-1)return null;
         return this.projects[this.project_current];
     }
 
@@ -57,17 +58,23 @@ class ObservableAppStore {
     }
 
     nextStep(task) {
-        console.log('nextStep');
         this.step_current++;
+    }
+
+    previousStep(task) {
+        this.step_current--;
     }
 
     toggleProjectsBar() {
         this.projects_bar=!this.projects_bar;
     }
 
+    setCurrentProject(project_current){
+        this.project_current = project_current;
+    }
 
-    setCurrentProjectName(name) {
-        this.currentProject.name=name;
+    setCurrentProjectKey(key,value) {
+        this.currentProject[key]=value;
     }
 
 
