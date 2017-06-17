@@ -17,18 +17,24 @@ shared static this()
 {
     import std.process : environment;
     hookSecret = environment["APP_GITHUB_HOOK_SECRET"];
-    botToken = environment["APP_GITHUB_BOT_TOKEN"];
+    botToken = "token " ~ environment["APP_GITHUB_BOT_TOKEN"];
 }
 
 void githubHook(HTTPServerRequest req, HTTPServerResponse res)
 {
     import std.stdio;
     auto json = verifyRequest(req.headers["X-Hub-Signature"], req.bodyReader.readAllUTF8);
-    switch (req.headers["X-GitHub-Event"])
+    auto eventType = req.headers["X-GitHub-Event"];
+    logInfo("Receiving %s from GH", eventType);
+    switch (eventType)
     {
     case "ping":
         return res.writeBody("pong");
     case "status":
+        return res.writeBody("handled");
+    case "issues":
+            auto issue = json["issue"].deserializeJson!Issue;
+            runTask((&updateGithubIssue).toDelegate, &issue);
         return res.writeBody("handled");
     case "pull_request":
         auto action = json["action"].get!string;
@@ -39,7 +45,7 @@ void githubHook(HTTPServerRequest req, HTTPServerResponse res)
             case "unlabeled", "closed", "opened", "reopened", "synchronize", "labeled", "edited":
                 auto pr = json["pull_request"].deserializeJson!PullRequest;
                 // runTask!
-                runTask((&updateGithubComment).toDelegate, &pr);
+                runTask((&updateGithubPr).toDelegate, &pr);
                 return res.writeBody("handled");
             default:
                 return res.writeBody("ignored");
@@ -88,12 +94,20 @@ auto ghSendRequest(T...)(HTTPMethod method, string url, T arg)
 {
     return ghSendRequest((scope req) {
         req.method = method;
+        req.headers["Authorization"] = botToken;
         static if (T.length)
             req.writeJsonBody(arg);
     }, url);
 }
 
-void updateGithubComment(PullRequest* pr)
+void updateGithubIssue(Issue* issue)
+{
+    import std.stdio;
+    string msg = "Hello world";
+    ghSendRequest(HTTPMethod.POST, issue.commentsURL, ["body" : msg]);
+}
+
+void updateGithubPr(PullRequest* pr)
 {
     //comment.remove();
     //comment.post(pr, "Hello world");
@@ -102,6 +116,55 @@ void updateGithubComment(PullRequest* pr)
 //==============================================================================
 // Github API objects
 //==============================================================================
+
+struct Issue
+{
+    import std.typecons : Nullable;
+
+    static struct Repo
+    {
+        @name("full_name") string fullName;
+    }
+    static struct Branch
+    {
+        string sha;
+        Repo repo;
+    }
+    enum State { open, closed }
+    @byName State state;
+
+    uint number;
+    string title;
+    @name("created_at") SysTime createdAt;
+    @name("updated_at") SysTime updatedAt;
+    bool locked;
+
+    @name("repository_url")
+    string repositoryUrl;
+    string repoSlug() const {
+        import std.range, std.algorithm, std.string;
+        return repositoryUrl[$ - repositoryUrl.representation.retro.splitter('/').take(2).joiner.walkLength - 1 .. $];
+    }
+
+    GHUser user;
+    Nullable!GHUser assignee;
+    GHUser[] assignees;
+
+    bool isOpen() const { return state == State.open; }
+
+    string htmlURL() const { return "https://github.com/%s/issues/%d".format(repoSlug, number); }
+    string commentsURL() const { return "%s/repos/%s/issues/%d/comments".format(githubAPIURL, repoSlug, number); }
+    string eventsURL() const { return "%s/repos/%s/issues/%d/events".format(githubAPIURL, repoSlug, number); }
+    string labelsURL() const { return "%s/repos/%s/issues/%d/labels".format(githubAPIURL, repoSlug, number); }
+
+    GHComment[] comments() const {
+        return ghGetRequest(commentsURL)
+                .readJson
+                .deserializeJson!(GHComment[]);
+    }
+}
+
+
 
 struct PullRequest
 {
@@ -169,17 +232,6 @@ struct PullRequest
         return ghGetRequest(statusURL)
                 .readJson["statuses"]
                 .deserializeJson!(GHCiStatus[]);
-    }
-
-    void postMerge(in ref GHMerge merge) const
-    {
-        ghSendRequest((scope req){
-            req.method = HTTPMethod.PUT;
-            // custom media type is required during preview period:
-            // https://developer.github.com/changes/2016-09-26-pull-request-merge-api-update/
-            req.headers["Accept"] = "application/vnd.github.polaris-preview+json";
-            req.writeJsonBody(merge);
-        }, mergeURL);
     }
 }
 
