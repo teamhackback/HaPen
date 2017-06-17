@@ -24,7 +24,7 @@ void registerAppRoutes(scope URLRouter router)
 
     // TODO: parse mongo url properly here
     MongoClientSettings mongoSettings;
-    auto mongoUrl = environment.get("APP_MONGO_URL", "mongodb://localhost");
+    auto mongoUrl = environment.get("APP_MONGO_URL", "mongodb://localhost/hapen");
     logInfo("Mongo.Connect: %s", mongoUrl);
     parseMongoDBUrl(mongoSettings, mongoUrl);
 
