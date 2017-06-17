@@ -9,15 +9,15 @@ class ObservableAppStore {
     @observable user = null;
     @observable projects_bar = false;
     @observable project_current = 0;
-    @observable project_new = {
+    @observable project_new = null/*{
         name: '',
         type: '',
         language: '',
         events: []
-    };
+    }*/;
     @observable projects = [
         {
-            name: 'Foo',
+            name: 'Foo project',
             type: 'Mobile app',
             language: 'Java',
             events: []
@@ -52,7 +52,22 @@ class ObservableAppStore {
     @computed
     get
     events() {
-        return [].concat(...this.projects.map((project)=>project.events.map((event=>Object.extends({project},event)))));
+        let events = [];
+        this.projects.forEach((project)=>{
+            project.events.forEach((event)=>{
+                events.push({
+                    type:event.type,
+                    message:event.message,
+                    project
+                })
+
+
+            });
+
+        });
+        return events;
+
+        //return [].concat(...this.projects.map((project)=>project.events.map((event=>Object.extend({project},event)))));
     }
 
 

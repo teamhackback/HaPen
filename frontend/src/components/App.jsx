@@ -40,7 +40,7 @@ class App extends Component {
                     {store.project_new?<Setup store={store}/>:undefined}
 
 
-                    {store.project_current?<Project store={store}/>:<Timeline store={store}/>}
+                    {store.project_current!==-1?<Project store={store}/>:<Timeline store={store}/>}
 
 
                 </div>

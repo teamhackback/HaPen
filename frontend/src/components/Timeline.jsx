@@ -12,8 +12,7 @@ import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import IconMenu from 'material-ui/IconMenu';
-import MenuItem from 'material-ui/MenuItem';
-
+import {List, ListItem} from 'material-ui/List';
 
 @observer
 export default class Timeline extends Component {
