@@ -6,6 +6,7 @@ HTTPServerSettings loadSettings()
     import vibe.core.core : workerThreadCount;
     import vibe.core.args : readOption;
     import vibe.db.redis.sessionstore : RedisSessionStore;
+    import vibe.db.redis.redis : connectRedisDB;
     import std.stdio;
     import std.conv : to;
 
@@ -18,13 +19,15 @@ HTTPServerSettings loadSettings()
                     & ~HTTPServerOption.parseJsonBody;
 
     writefln("workers: %d", workerThreadCount);
-    if (!debugMode)
-        settings.options &= ~HTTPServerOption.errorStackTraces;
+    //if (!debugMode)
+    settings.options |= HTTPServerOption.errorStackTraces;
 
     //settings.sessionStore = new MemorySessionStore;
     auto redisUrl = environment.get("APP_REDIS_URL", "localhost");
-    long redisDB = environment.get("APP_REDIS_DB", "0").to!long;
-    settings.sessionStore = new RedisSessionStore(redisUrl, redisDB);
+    auto redisDb = environment.get("APP_REDIS_DB", "0").to!long;
+
+    auto redisInstance = connectRedisDB(redisUrl);
+    settings.sessionStore = new RedisSessionStore(redisInstance, redisDb);
     settings.sessionIdCookie = "hackback.session_id";
     settings.serverString = "hackback.d/0.1";
     readOption("port|p", &settings.port, "Sets the port used for serving.");
