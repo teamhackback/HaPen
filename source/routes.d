@@ -26,11 +26,13 @@ void registerAppRoutes(scope URLRouter router)
     logInfo("Mongo.Connect: %s", host);
     auto dbName = environment.get("APP_MONGO_DB", "hackback");
     logInfo("Mongo.Open: %s", dbName);
-    auto db = connectMongoDB(host).getDatabase(dbName);
+    auto mongoInstance = connectMongoDB(host);
+    logInfo("Mongo.Instance: %s", mongoInstance);
+    auto mongoDB = mongoInstance.getDatabase(dbName);
 
     // TODO: how to initialize controllers?
     import controllers.user : UserController, users;
-    users = new UserController(db);
+    users = new UserController(mongoDB);
 
     import services.offers : Offers;
 
@@ -38,5 +40,5 @@ void registerAppRoutes(scope URLRouter router)
     auto userServiceSettings = new WebInterfaceSettings();
     userServiceSettings.urlPrefix = "/api";
     userServiceSettings.ignoreTrailingSlash = true; // true: overloads for trailing /
-    router.registerWebInterface(new Offers(db), userServiceSettings);
+    router.registerWebInterface(new Offers(mongoDB), userServiceSettings);
 }
