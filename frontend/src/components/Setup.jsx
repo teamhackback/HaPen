@@ -22,13 +22,13 @@ export default class Setup extends Component {
             <FlatButton
                 label="Cancel"
                 primary={true}
-                onTouchTap={this.handleClose}
+                onClick={()=>console.log('tapped!')}
             />,
             <FlatButton
                 label="Submit"
                 primary={true}
                 keyboardFocused={true}
-                onTouchTap={()=>store.nextStep()}
+                onClick={()=>store.nextStep()/*todo why thare is working onClick not onTouchTap???*/}
             />,
         ];
 
@@ -43,9 +43,9 @@ export default class Setup extends Component {
                     >
 
 
-                        <Stepper activeStep={store.step}>
+                        <Stepper activeStep={store.step_current}>
                             <Step>
-                                <StepLabel>Select project name</StepLabel>
+                                <StepLabel>Select project name {store.step_current}</StepLabel>
                             </Step>
                             <Step>
                                 <StepLabel>Select project type</StepLabel>

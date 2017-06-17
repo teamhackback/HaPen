@@ -1,10 +1,12 @@
 import React, {Component} from 'react';
-import {observer} from 'mobx-react';
+import {observer} from "mobx-react";
 import logo from '../assets/logo.svg';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import AppBar from 'material-ui/AppBar';
+//import Projects from './Projects';
+//import Timeline from './Timeline';
 import Setup from './Setup';
 import './App.scss';
 
@@ -26,6 +28,8 @@ class App extends Component {
                         iconElementRight={<FlatButton label="Login" />}
                     />
 
+                    {/*<Projects store={store}/>
+                    <Timeline store={store}/>*/}
                     <Setup store={store}/>
 
 
