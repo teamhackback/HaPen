@@ -1,39 +1,76 @@
-import {observable, computed, mobx} from 'mobx';
+import {observable, computed, autorun} from 'mobx';
 
 
 class ObservableAppStore {
-    @observable step = 0;
-
-
     constructor() {
-        mobx.autorun(() => console.log(this.report));
+        autorun(() => console.log(this.report));
+    }
+
+    @observable user = null;
+    @observable projects_bar = false;
+    @observable project_current = 0;
+    @observable projects = [
+        {
+            name: null,
+            type: null,
+            language: null,
+            events: []
+        }, {
+            name: null,
+            type: null,
+            language: null,
+            events: [{
+                    type: 'COMMIT',
+                    message: 'hello HaPen',
+                    date: new Date(),
+                },{
+                    type: 'COMMIT',
+                    message: 'hello 2017-05-05',
+                    date: new Date('2017-05-05'),
+                }]
+        }
+
+    ];
+
+
+    @observable step_current = 0;//todo better
+
+
+    @computed
+    get
+    currentProject() {
+        return this.projects[this.project_current];
+    }
+
+    @computed
+    get
+    events() {
+        return [].concat(...this.projects.map((project)=>project.events.map((event=>Object.extends({project},event)))));
     }
 
 
-    nextStep(task){
-        this.step++;
+
+    @computed
+    get
+    logged() {
+        return this.user?true:false;
     }
 
-    /*@computed get completedTodosCount() {
-        return this.todos.filter(
-            todo => todo.completed === true
-        ).length;
+    nextStep(task) {
+        console.log('nextStep');
+        this.step_current++;
     }
 
-    @computed get report() {
-        if (this.todos.length === 0)
-            return "<none>";
-        return `Next todo: "${this.todos[0].task}". ` +
-            `Progress: ${this.completedTodosCount}/${this.todos.length}`;
+    toggleProjectsBar() {
+        this.projects_bar=!this.projects_bar;
     }
 
-    addTodo(task) {
-        this.todos.push({
-            task: task,
-            completed: false,
-            assignee: null
-        });
-    }*/
+
+    setCurrentProjectName(name) {
+        this.currentProject.name=name;
+    }
+
+
 }
 
 
