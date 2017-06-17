@@ -8,7 +8,7 @@ void registerAppRoutes(scope URLRouter router)
     import hb.web.rest : registerRestInterface;
     import hb.web.web : registerWebInterface;
     import vibe.db.mongo.mongo : connectMongoDB;
-    import vibe.db.mongo.settings : MongoClientSettings, parseMongoDBUrl;
+    import vibe.db.mongo.settings : MongoClientSettings, MongoAuthMechanism, parseMongoDBUrl;
 
     with(router) {
         get("/api/session", (req, res) {
@@ -36,6 +36,8 @@ void registerAppRoutes(scope URLRouter router)
     logInfo("Mongo.hosts: %s", mongoSettings.hosts);
     logInfo("Mongo.username: %s", mongoSettings.username);
     logInfo("Mongo.digest: %s", mongoSettings.digest);
+    // scramSHA1
+    mongoSettings.authMechanism = MongoAuthMechanism.scramSHA1;
 
     auto mongoInstance = connectMongoDB(mongoSettings);
     logInfo("Mongo.Instance: %s", mongoSettings.database);
