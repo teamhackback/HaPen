@@ -16,7 +16,7 @@ void registerAppRoutes(scope URLRouter router)
                 res.writeBody("Empty Session");
         });
         get("/", (req, res) {
-            res.writeBody("Hello world.");
+            res.writeBody("Hello Scalingo.");
         });
     }
 
