@@ -20,6 +20,10 @@ void registerAppRoutes(scope URLRouter router)
         get("/", (req, res) {
             res.writeBody("Hello Scalingo...");
         });
+
+        get("/api/github_hook", (req, res) {
+            logInfo("GH-req: %s", req);
+        });
     }
 
     // TODO: parse mongo url properly here
