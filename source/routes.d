@@ -32,7 +32,11 @@ void registerAppRoutes(scope URLRouter router)
     logInfo("Mongo.Connect: %s", mongoUrl);
     parseMongoDBUrl(mongoSettings, mongoUrl);
 
-    logInfo("Mongo.Open: %s", mongoSettings);
+    logInfo("Mongo.database: %s", mongoSettings.database);
+    logInfo("Mongo.hosts: %s", mongoSettings.hosts);
+    logInfo("Mongo.username: %s", mongoSettings.username);
+    logInfo("Mongo.digest: %s", mongoSettings.digest);
+
     auto mongoInstance = connectMongoDB(mongoSettings);
     logInfo("Mongo.Instance: %s", mongoSettings.database);
     auto mongoDB = mongoInstance.getDatabase(mongoSettings.database);
