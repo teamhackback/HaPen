@@ -9,10 +9,10 @@ dependency "vibe-d:mongodb" version="~>0.7.31"
 dependency "vibe-d:redis" version="~>0.7.31"
 dependency "oauth" version="~>0.2.0-beta.2"
 dependency "hb-web" version="~>0.0.1"
-subConfiguration "vibe-d:core" "vibe-core"
+/*subConfiguration "vibe-d:core" "vibe-core"*/
 postBuildCommands "./scripts/build_frontend.sh"
 /* Experimental configurations */
 /*subConfiguration "vibe-d:core" "libasync"*/
-/*subConfiguration "vibe-d:core" "libevent"*/
+subConfiguration "vibe-d:core" "libevent"
 /*versions "Have_Botan"*/
 versions "VibeDefaultMain"
