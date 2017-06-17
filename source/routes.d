@@ -22,8 +22,9 @@ void registerAppRoutes(scope URLRouter router)
     }
 
     auto host = environment.get("APP_MONGO_URL", "mongodb://localhost");
-    logInfo("Trying to connect to %s", host);
+    logInfo("Mongo.Connect: %s", host);
     auto dbName = environment.get("APP_MONGO_DB", "hackback");
+    logInfo("Mongo.Open: %s", host);
     auto db = connectMongoDB(host).getDatabase(dbName);
 
     // TODO: how to initialize controllers?
