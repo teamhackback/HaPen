@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {observer} from 'mobx-react';
+import {observer} from "mobx-react";
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import {
@@ -60,6 +60,7 @@ export default class Setup extends Component {
 
                         <TextField
                             floatingLabelText="Project name"
+                            onChange={(event,value)=>store.setCurrentProjectName(value)}
                         />
 
 
