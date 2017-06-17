@@ -1,0 +1,28 @@
+.dub
+docs.json
+__dummy.html
+*.o
+*.obj
+users
+
+# dependencies
+node_modules
+
+# testing
+coverage
+
+# production
+build
+
+# misc
+.DS_Store
+#.env
+npm-debug.log
+
+# tern
+.tern-port
+.tern-project
+
+.env
+.env_prod
+/hapen

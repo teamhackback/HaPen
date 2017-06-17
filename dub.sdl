@@ -1,0 +1,17 @@
+name "hapen"
+description "OpenSource is awesome"
+copyright "Copyright © 2017, HackBack"
+authors "Team HackBack"
+dependency "vibe-d:core" version="~>0.7.31"
+dependency "vibe-d:data" version="~>0.7.31"
+dependency "vibe-d:http" version="~>0.7.31"
+dependency "vibe-d:mongodb" version="~>0.7.31"
+dependency "vibe-d:redis" version="~>0.7.31"
+dependency "oauth" version="~>0.2.0-beta.2"
+dependency "hb-web" version="~master"
+subConfiguration "vibe-d:core" "vibe-core"
+/* Experimental configurations */
+/*subConfiguration "vibe-d:core" "libasync"*/
+subConfiguration "vibe-d:core" "libevent"
+/*versions "Have_Botan"*/
+versions "VibeDefaultMain"
