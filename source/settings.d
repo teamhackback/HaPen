@@ -15,7 +15,7 @@ HTTPServerSettings loadSettings()
     settings.port = environment.get("APP_PORT", "8080").to!ushort;
     settings.bindAddresses = ["0.0.0.0"];
     settings.options = HTTPServerOption.defaults
-                       & ~HTTPServerOption.parseJsonBody;
+                       | HTTPServerOption.parseJsonBody;
 
     writefln("workers: %d", workerThreadCount);
     if (!debugMode)

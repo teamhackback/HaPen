@@ -17,13 +17,12 @@ void registerAppRoutes(scope URLRouter router)
             else
                 res.writeBody("Empty Session");
         });
-        get("/", (req, res) {
-            res.writeBody("Hello Scalingo...");
-        });
-
         post("/api/github_hook", (req, res) {
             logInfo("GH-req: %s", req);
             logInfo("JSON: %s", req.json);
+        });
+        get("/", (req, res) {
+            res.writeBody("Hello Scalingo...");
         });
     }
 
