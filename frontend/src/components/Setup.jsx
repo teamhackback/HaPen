@@ -77,7 +77,7 @@ export default class Setup extends Component {
             <FlatButton
                 label="Cancel"
                 primary={false}
-                onClick={()=>console.log('tapped!')}
+                onClick={()=>store.setCurrentProject(-1)}
             />,
             <FlatButton
                 label="Previous"

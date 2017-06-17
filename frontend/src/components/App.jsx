@@ -5,7 +5,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import AppBar from 'material-ui/AppBar';
-//import Projects from './Projects';
+import Projects from './Projects';
 //import Timeline from './Timeline';
 import Setup from './Setup';
 import './App.scss';
@@ -25,13 +25,13 @@ class App extends Component {
                     <AppBar
                         title="HaPen"
                         iconElementLeft={<img src={logo} className="logo" alt="HaPen logo"/>}
-                        iconElementRight={<FlatButton label="Login" />}
+                        iconElementRight={<FlatButton label="Projects" onClick={()=>store.toggleProjectsBar()} />}
                     />
 
-                    {/*<Projects store={store}/>
-                    <Timeline store={store}/>*/}
+                     {/*<Timeline store={store}/>*/}
 
 
+                    {store.projects_bar?<Projects store={store}/>:undefined}
                     {store.currentProject?<Setup store={store}/>:undefined}
 
 

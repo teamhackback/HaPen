@@ -16,9 +16,9 @@ class ObservableAppStore {
             language: null,
             events: []
         }, {
-            name: null,
-            type: null,
-            language: null,
+            name: 'HaPen',
+            type: 'Web app',
+            language: 'D, JavaScript',
             events: [{
                     type: 'COMMIT',
                     message: 'hello HaPen',
@@ -70,6 +70,7 @@ class ObservableAppStore {
     }
 
     setCurrentProject(project_current){
+        this.projects_bar=false;
         this.project_current = project_current;
     }
 

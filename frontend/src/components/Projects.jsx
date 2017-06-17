@@ -13,8 +13,9 @@ export default class Projects extends Component {
 
         return (
             <Drawer open={()=>{}}>
-                <MenuItem>Menu Item</MenuItem>
-                <MenuItem>Menu Item 2</MenuItem>
+
+                {store.projects.map((project,index)=>
+                    <MenuItem onClick={()=>store.setCurrentProject(index)}>{project.name}</MenuItem>)}
             </Drawer>
 
         )
