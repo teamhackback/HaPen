@@ -1,68 +1,21 @@
 import React, {Component} from 'react';
 //import logo from '../assets/logo.svg';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import FlatButton from 'material-ui/FlatButton';
-import RaisedButton from 'material-ui/RaisedButton';
 import AppBar from 'material-ui/AppBar';
-import {
-    Step,
-    Stepper,
-    StepLabel,
-} from 'material-ui/Stepper';
-import Dialog from 'material-ui/Dialog';
-
-
+import Setup from './Setup';
 import './App.scss';
 
 class App extends Component {
     render() {
 
-        const actions = [
-            <FlatButton
-                label="Cancel"
-                primary={true}
-                onTouchTap={this.handleClose}
-            />,
-            <FlatButton
-                label="Submit"
-                primary={true}
-                keyboardFocused={true}
-                onTouchTap={this.handleClose}
-            />,
-        ];
-
-
-        return (
+       return (
             <MuiThemeProvider>
                 <div className="App">
 
 
                     <AppBar title="HaPen"/>
 
-
-                    <Dialog
-                        title="Dialog With Actions"
-                        actions={actions}
-                        modal={false}
-                        open={true}
-                        onRequestClose={this.handleClose}
-                    >
-
-
-                        <Stepper activeStep={0}>
-                            <Step>
-                                <StepLabel>Select project name</StepLabel>
-                            </Step>
-                            <Step>
-                                <StepLabel>Select project type</StepLabel>
-                            </Step>
-                            <Step>
-                                <StepLabel>Select project language</StepLabel>
-                            </Step>
-                        </Stepper>
-
-
-                    </Dialog>
+                    <Setup/>
 
 
                     {/*<nav className="top">
