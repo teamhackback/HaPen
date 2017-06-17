@@ -9,9 +9,13 @@ import vibe.core.log;
 import vibe.core.core : runTask;
 import std.functional : toDelegate;
 
+import std.algorithm;
+import std.typecons;
+
 string hookSecret;
 string botToken;
 string githubAPIURL = "https://api.github.com";
+string botName = "hapen1";
 
 shared static this()
 {
@@ -33,19 +37,21 @@ void githubHook(HTTPServerRequest req, HTTPServerResponse res)
     case "status":
         return res.writeBody("handled");
     case "issues":
-            auto issue = json["issue"].deserializeJson!Issue;
-            runTask((&updateGithubIssue).toDelegate, &issue);
+        auto issue = json["issue"].deserializeJson!Issue;
+        logDebug("Issue#%s with action:%s", issue.number, json["action"]);
+            //runTask((&updateComment!Issue).toDelegate, &issue);
         return res.writeBody("handled");
     case "pull_request":
         auto action = json["action"].get!string;
-        logDebug("#%s %s", json["number"], action);
+        logDebug("PR#%s with action:%s", json["number"], action);
 
         switch (action)
         {
             case "unlabeled", "closed", "opened", "reopened", "synchronize", "labeled", "edited":
                 auto pr = json["pull_request"].deserializeJson!PullRequest;
                 // runTask!
-                runTask((&updateGithubPr).toDelegate, &pr);
+                runTask((&updateComment!PullRequest).toDelegate, &pr);
+                runTask((&workWithPR).toDelegate, &pr);
                 return res.writeBody("handled");
             default:
                 return res.writeBody("ignored");
@@ -100,17 +106,39 @@ auto ghSendRequest(T...)(HTTPMethod method, string url, T arg)
     }, url);
 }
 
-void updateGithubIssue(Issue* issue)
+auto getBotComment(R)(in ref R r)
 {
-    import std.stdio;
-    string msg = "Hello world";
-    ghSendRequest(HTTPMethod.POST, issue.commentsURL, ["body" : msg]);
+    Nullable!GHComment comment;
+    auto res = ghGetRequest(r.commentsURL)
+        .readJson[]
+        .find!(c => c["user"]["login"] == botName);
+    if (res.length)
+        comment = deserializeJson!GHComment(res[0]);
+    return comment;
 }
 
-void updateGithubPr(PullRequest* pr)
+void updateComment(R)(R* r)
 {
-    //comment.remove();
-    //comment.post(pr, "Hello world");
+    auto comment = r.getBotComment();
+    string msg = "Hello world" ~ Clock.currTime.toString();
+    if (comment.isNull) {
+        GHComment.post(r, msg);
+    } else {
+        logInfo("Comment: %s", comment);
+        comment.update(msg);
+    }
+}
+
+void workWithPR(PullRequest* pr)
+{
+    GHCiStatus status = {
+        state : GHCiStatus.State.success,
+        description: "Awesome PR!",
+        targetUrl: "https://hapen.hackback.tech",
+        context: "hapen"
+    };
+    logInfo("Sending status to GH: %s", status);
+    pr.addStatus(status);
 }
 
 //==============================================================================
@@ -233,6 +261,12 @@ struct PullRequest
                 .readJson["statuses"]
                 .deserializeJson!(GHCiStatus[]);
     }
+
+    void addStatus(GHCiStatus status)
+    {
+        auto url = "%s/repos/%s/statuses/%s".format(githubAPIURL, repoSlug, head.sha);
+        ghSendRequest(HTTPMethod.POST, url, status);
+    }
 }
 
 static struct GHUser
@@ -249,9 +283,9 @@ struct GHComment
     string body_;
     string url;
 
-    static void post(in ref PullRequest pr, string msg)
+    static void post(R)(in ref R r, string msg)
     {
-        ghSendRequest(HTTPMethod.POST, pr.commentsURL, ["body" : msg]);
+        ghSendRequest(HTTPMethod.POST, r.commentsURL, ["body" : msg]);
     }
 
     void update(string msg) const
