@@ -1,3 +1,3 @@
 #!/bin/bash
 
-cd frontend && yarn install && yarn build
+cd frontend && npm install --global yarn && yarn install && yarn build
