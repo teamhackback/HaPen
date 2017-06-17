@@ -73,7 +73,7 @@ export default class Project extends Component {
         const store = this.props.store;
 
         return (
-            <Paper zDepth={2} className="container">
+            <Paper zDepth={0} className="container">
                 <h1>{store.currentProject.name}</h1>
                 <h2>{store.currentProject.type} in {store.currentProject.language}</h2>
 

@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {observer} from "mobx-react";
-import logo from '../assets/logo.svg';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -9,6 +8,7 @@ import Projects from './Projects';
 import Timeline from './Timeline';
 import Setup from './Setup';
 import Project from './Project';
+import FontIcon from 'material-ui/FontIcon';
 import './App.scss';
 
 @observer
@@ -18,19 +18,23 @@ class App extends Component {
 
         const store = this.props.store;
 
+        const iconStyles = {
+            marginRight: 24,
+        };
+
        return (
             <MuiThemeProvider>
                 <div className="App">
 
 
                     <AppBar
-                        title="HaPen"
-                        iconElementLeft={<img src={logo} className="logo" alt="HaPen logo"/>}
+                        title={<div>HAPEN</div>}
+                        iconElementLeft={<img src="/logo.png" className="logo" alt="HaPen logo"/>}
                         iconElementRight={<div>
 
-                            <FlatButton label="Timeline" onClick={()=>store.setCurrentProject(-1)} />
-                            <FlatButton label="Projects" onClick={()=>store.toggleProjectsBar()} />
-                            <FlatButton label="New Project" onClick={()=>store.createNewProject()} />
+                            <FlatButton icon={<i className="fa fa-calendar" aria-hidden="true"></i>} label="Timeline" onClick={()=>store.setCurrentProject(-1)} />
+                            <FlatButton icon={<i className="fa fa-list" aria-hidden="true"></i>} label="Projects" onClick={()=>store.toggleProjectsBar()} />
+                            <FlatButton icon={<i className="fa fa-plus" aria-hidden="true"></i>} label="New Project" onClick={()=>store.createNewProject()} />
 
 
                         </div>}
