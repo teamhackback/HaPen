@@ -11,6 +11,6 @@
 		"openssl": "1.1.5+1.0.1g",
 		"taggedalgebraic": "0.10.7",
 		"vibe-core": "1.0.0",
-		"vibe-d": "0.8.0-beta.8"
+		"vibe-d": {"path":"vendor/vibed"}
 	}
 }
