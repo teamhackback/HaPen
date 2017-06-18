@@ -17,8 +17,9 @@ string botToken;
 string githubAPIURL = "https://api.github.com";
 string botName = "hapen1";
 
-import vibe.data.bson : BsonObjectID;
+import vibe.data.bson : Bson, BsonObjectID;
 import vibe.db.mongo.mongo : MongoCollection;
+import vibe.db.mongo.database : MongoDatabase;
 
 shared static this()
 {
@@ -30,9 +31,11 @@ shared static this()
 class GitHub
 {
     MongoCollection m_issues;
-    this(MongoCollection issues)
+    MongoCollection m_prs;
+    this(MongoDatabase mongoDB)
     {
-        m_issues = issues;
+        m_issues = mongoDB["issues"];
+        m_prs = mongoDB["pull_requests"];
     }
 
     void hook(HTTPServerRequest req, HTTPServerResponse res)
@@ -48,25 +51,22 @@ class GitHub
         case "status":
             return res.writeBody("handled");
         case "issues":
-            auto issue = json["issue"].deserializeJson!Issue;
-            logDebug("Issue#%s with action:%s", issue.number, json["action"]);
-            static struct Foo {
-                BsonObjectID id;
-            }
-            auto doc = Foo();
-            m_issues.insert(doc);
+            //auto issue = json["issue"].deserializeJson!Issue;
+            logDebug("Issue#%s with action:%s", json["issue"]["number"], json["action"]);
+            storeIssue(json);
                 //runTask((&updateComment!Issue).toDelegate, &issue);
             return res.writeBody("handled");
         case "pull_request":
             auto action = json["action"].get!string;
             logDebug("PR#%s with action:%s", json["number"], action);
+            storePR(json);
             switch (action)
             {
                 case "unlabeled", "closed", "opened", "reopened", "synchronize", "labeled", "edited":
                     auto pr = json["pull_request"].deserializeJson!PullRequest;
                     // runTask!
-                    runTask((&updateComment!PullRequest).toDelegate, &pr);
-                    runTask((&workWithPR).toDelegate, &pr);
+                    pr.updateComment;
+                    pr.workWithPR;
                     return res.writeBody("handled");
                 default:
                     return res.writeBody("ignored");
@@ -75,7 +75,31 @@ class GitHub
             return res.writeVoidBody();
         }
     }
+
+    void storeIssue(Json json)
+    {
+        static struct Issue {
+            BsonObjectID _id;
+            Json[] events;
+        }
+        auto issue = Issue();
+        issue.events ~= json;
+        m_issues.insert(issue);
+    }
+
+    void storePR(Json json)
+    {
+        static struct PR {
+            BsonObjectID _id;
+            Json[] events;
+        }
+        auto pr = PR();
+        pr.events ~= json;
+        m_prs.insert(pr);
+    }
 }
+
+
 
 auto ghGetRequest(string url)
 {
@@ -133,7 +157,7 @@ auto getBotComment(R)(in ref R r)
     return comment;
 }
 
-void updateComment(R)(R* r)
+void updateComment(R)(R r)
 {
     auto comment = r.getBotComment();
     string msg = "Hello world" ~ Clock.currTime.toString();
@@ -145,7 +169,7 @@ void updateComment(R)(R* r)
     }
 }
 
-void workWithPR(PullRequest* pr)
+void workWithPR(PullRequest pr)
 {
     GHCiStatus status = {
         state : GHCiStatus.State.success,

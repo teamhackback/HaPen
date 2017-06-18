@@ -37,7 +37,7 @@ void registerAppRoutes(scope URLRouter router)
     //--------------------------------------------------------------------------
     import github : GitHub;
 
-    auto gh = new GitHub(mongoDB["issues"]);
+    auto gh = new GitHub(mongoDB);
     with(router) {
         post("/api/github_hook", &gh.hook);
     }
