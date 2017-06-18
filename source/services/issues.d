@@ -53,9 +53,9 @@ class Issues
         }
     }
 
-    @anyAuth
+    //@anyAuth
     @path("/:issueId/take")
-    auto get(string _issueId, AuthInfo auth)
+    auto get(string _issueId, /*AuthInfo auth*/)
     {
         import std.datetime : Clock, DateTime;
 
@@ -70,7 +70,7 @@ class Issues
             }
             Bson set = Bson.emptyObject;
             set["takenAt"] = BsonDate(Clock.currTime);
-            set["takenBy"] = auth.userId;
+            //set["takenBy"] = auth.userId;
             m_issues.update(["aid": _issueId], [
                 "$set": set
             ]);
