@@ -54,8 +54,9 @@ class Issues
     }
 
     //@anyAuth
+    @noAuth
     @path("/:issueId/take")
-    auto get(string _issueId, /*AuthInfo auth*/)
+    auto take(string _issueId, /*AuthInfo auth*/)
     {
         import std.datetime : Clock, DateTime;
 
