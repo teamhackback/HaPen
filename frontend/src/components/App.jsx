@@ -10,7 +10,7 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import {grey900} from 'material-ui/styles/colors';
 
 import Home from './Home';
-import Issue from './Issue';
+import Events from './Events';
 import Login from './Login';
 import Search from './SearchResult';
 
@@ -39,7 +39,7 @@ export default class App extends React.Component {
                     <Route exact path="/" component={Home} />
                     <Route path="/login" component={Login} />
                     <PrivateRoute path="/search" component={Search} redirectTo="/login" store={this.props.store} />
-                    <PrivateRoute path="/issue" component={Issue} redirectTo="/login" store={this.props.store} />
+                    <PrivateRoute path="/issue" component={Events} redirectTo="/login" store={this.props.store} />
                 </Switch>
             </div>
           </Router>
