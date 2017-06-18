@@ -46,10 +46,16 @@ void registerAppRoutes(scope URLRouter router)
     // Start API
     //--------------------------------------------------------------------------
     import services.issues : Issues;
+    import services.admin : Admin;
 
     import hb.web.web : registerWebInterface, WebInterfaceSettings;
     auto userServiceSettings = new WebInterfaceSettings();
     userServiceSettings.urlPrefix = "/api";
     userServiceSettings.ignoreTrailingSlash = true; // true: overloads for trailing /
     router.registerWebInterface(new Issues(mongoDB), userServiceSettings);
+
+    auto adminServiceSettings = new WebInterfaceSettings();
+    adminServiceSettings.urlPrefix = "/admin";
+    userServiceSettings.ignoreTrailingSlash = true; // true: overloads for trailing /
+    router.registerWebInterface(new Admin(mongoDB), adminServiceSettings);
 }

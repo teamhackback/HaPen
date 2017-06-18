@@ -5,6 +5,10 @@ import vibe.http.server : HTTPServerRequest, HTTPServerResponse;
 import vibe.stream.operations : readAllUTF8;
 import std.datetime;
 import std.format;
+import std.array;
+import std.algorithm;
+import std.string;
+import std.stdio;
 import vibe.core.log;
 import vibe.core.core : runTask;
 import std.functional : toDelegate;
@@ -201,6 +205,42 @@ void workWithPR(PullRequest pr)
     };
     logInfo("Sending status to GH: %s", status);
     pr.addStatus(status);
+}
+
+//==============================================================================
+// Fill DB with random issues
+//==============================================================================
+
+private struct AllPages
+{
+    private string url;
+    private string link = "next";
+
+    // does not cache
+    auto front() {
+        scope req = ghGetRequest(url);
+        link = req.headers.get("Link");
+        return req.readJson[];
+    }
+
+    void popFront()
+    {
+        import std.utf : byCodeUnit;
+        url = link[1..$].byCodeUnit.until(">").array;
+    }
+    bool empty()
+    {
+        return !link.canFind("next");
+    }
+    
+    typeof(this) save() {
+        return this;
+    }
+}
+
+auto ghGetAllPages(string url)
+{
+    return AllPages(url);
 }
 
 //==============================================================================
