@@ -4,6 +4,7 @@ import superagent from 'superagent';
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 import FlatButton from 'material-ui/FlatButton';
 import {throttle} from 'lodash';
+const markdown = require('markdown').markdown;
 const moment = require('moment');
 
 export class SearchResult extends Component {
@@ -23,7 +24,8 @@ export class SearchResult extends Component {
                 <FlatButton label="Take" />
               </CardActions>
               <CardText expandable={true}>
-                {item.blob.body}
+                <div dangerouslySetInnerHTML={{__html: markdown.toHTML(item.blob.body)}}>
+                </div>
               </CardText>
             </Card>
           ))}
@@ -38,14 +40,16 @@ export default class Search extends Component {
   constructor() {
     super();
     this.apiSearch = throttle((val) => {
+      const filter = !!val ? `?search=${val}` : "";
       superagent
-        .get(`https://hapen.hackback.tech/api/issues?search=${val}`)
+        .get(`https://hapen.hackback.tech/api/issues${filter}`)
         .end((err, res) => {
           if (!(err || !res.ok)) {
             this.setState({items: res.body});
           }
         });
       }, 100);
+    this.apiSearch();
   }
   onSearch = (_, val) => {
     this.apiSearch(val);
