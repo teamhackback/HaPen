@@ -23,6 +23,6 @@ npm-debug.log
 .tern-port
 .tern-project
 
-.env
+/.env
 .env_prod
 /hapen
