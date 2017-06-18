@@ -1,10 +1,11 @@
 import React from 'react';
 import AppBar from 'material-ui/AppBar';
 import TextWhiteLogo from '../../public/text-white-logo.svg';
+import PropTypes from 'prop-types';
 
 import DrawerMenu from './DrawerMenu';
 
-export default class AppBarTop extends React.Component {
+class AppBarTop extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -32,9 +33,10 @@ export default class AppBarTop extends React.Component {
 
 
   render() {
+    console.log(this.props.match);
     return (
       <div>
-        <AppBar title={<img src={TextWhiteLogo} style={{height:60}} alt="haPen logo"/>} onLeftIconButtonTouchTap={this.handleDrawerToggle} />
+        <AppBar title={<img src={TextWhiteLogo} style={{height:50}} alt="haPen logo"/>} onLeftIconButtonTouchTap={this.handleDrawerToggle} />
         <DrawerMenu
           store={this.props.store}
           open={this.state.drawerOpen}
@@ -45,3 +47,10 @@ export default class AppBarTop extends React.Component {
     );
   }
 }
+
+AppBarTop.contextTypes = {
+  router: PropTypes.object,
+  location: React.PropTypes.string.isRequired
+};
+
+export default AppBarTop;
