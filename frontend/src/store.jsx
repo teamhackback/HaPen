@@ -8,7 +8,7 @@ class ObservableAppStore {
 
     @observable user = null;
     @observable projects_bar = false;
-    @observable project_current = 0;
+    @observable project_current = -1;
     @observable project_new = null/*{
         name: '',
         type: '',
@@ -39,7 +39,7 @@ class ObservableAppStore {
     ];
 
 
-    @observable step_current = 0;//todo better
+    @observable step_current = -1;//todo better
 
 
     @computed
