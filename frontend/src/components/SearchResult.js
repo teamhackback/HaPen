@@ -57,6 +57,7 @@ export default class Search extends Component {
           onChange={this.onSearch}
           defaultValue=""
           floatingLabelText="Search"
+          fullWidth={true}
         />
         <SearchResult items={this.state.items} />
       </div>
