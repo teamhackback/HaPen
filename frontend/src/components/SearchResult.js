@@ -4,6 +4,7 @@ import superagent from 'superagent';
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 import FlatButton from 'material-ui/FlatButton';
 import {throttle} from 'lodash';
+const moment = require('moment');
 
 export class SearchResult extends Component {
   render() {
@@ -12,8 +13,8 @@ export class SearchResult extends Component {
           {this.props.items.map((item,index)=>(
             <Card key={item.aid}>
               <CardHeader
-                title={`Issue ${item.blob.number}`}
-                subtitle={item.blob.title}
+                title={`Issue ${item.blob.number} - ${item.blob.title}`}
+                subtitle={moment(item.blob.created_at).fromNow()}
                 avatar={item.blob.user.avatar_url}
                 actAsExpander={true}
                 showExpandableButton={true}
