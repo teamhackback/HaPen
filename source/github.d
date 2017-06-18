@@ -22,6 +22,7 @@ string hookSecret;
 string botToken;
 string githubAPIURL = "https://api.github.com";
 string botName = "hapen1";
+string slackHook;
 
 import vibe.data.bson : Bson, BsonObjectID, serializeToBson;
 import vibe.db.mongo.mongo : MongoCollection;
@@ -33,6 +34,7 @@ shared static this()
     import std.process : environment;
     hookSecret = environment["APP_GITHUB_HOOK_SECRET"];
     botToken = "token " ~ environment["APP_GITHUB_BOT_TOKEN"];
+    slackHook = environment["APP_SLACK_WEBHOOK"];
 }
 
 static struct ApiIssue {
@@ -94,6 +96,16 @@ class GitHub
                     storePR(json, pr);
                     pr.updateComment;
                     pr.workWithPR;
+                    if (action == "closed")
+                    {
+                        requestHTTP(slackHook, (scope req) {
+                            req.method = HTTPMethod.POST;
+                            req.writeJsonBody([
+                                "text": pr.user.login ~ " just got an Open Source contribution merged. Wow!!\n" ~pr.htmlURL ~"\n"~
+                                        "https://hapen.hackback.tech/issue/" ~ pr.repoSlug.replace("/", "_") ~ "_" ~ pr.number.to!string
+                            ]);
+                        });
+                    }
                     return res.writeBody("handled");
                 default:
                     return res.writeBody("ignored");
