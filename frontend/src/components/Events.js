@@ -47,6 +47,7 @@ function PullRequest({data}){
   );
 }
 
+
 export default class Events extends Component {
   constructor(props) {
     super(props);

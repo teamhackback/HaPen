@@ -13,16 +13,21 @@ const moment = require('moment');
 import './styles/Search.scss';
 import PropTypes from 'prop-types';
 
+function makeSlug(url)
+{
+  return url.split("/").slice(-2).join("/");
+}
+
 export class SearchResult extends Component {
   render() {
     return (
       <div>
           {this.props.items.map((item,index)=>(
-            <Link to={`/issue/${item.aid}`} key={item.aid}>
-              <Card expandable={false}>
+            <Link to={`/issue/${item.aid}`} key={item.aid} >
+              <Card expandable={false} className="animated slideInUp">
                 <CardHeader
                   title={`Issue ${item.blob.number} - ${item.blob.title}`}
-                  subtitle={moment(item.blob.created_at).fromNow()}
+                  subtitle={`${makeSlug(item.blob.repository_url)} - ${moment(item.blob.created_at).fromNow()}`}
                   avatar={item.blob.user.avatar_url}
                 />
               </Card>
