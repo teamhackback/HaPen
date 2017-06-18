@@ -79,7 +79,7 @@ void registerOAuth(scope URLRouter router)
         res.terminateSession();
         // TODO: for some reason writeVoidBody doesn't send the response directly
         //res.writeVoidBody;
-        res.writeBody("Logged out");
+        res.redirect(finalRedirectUri);
     });
 
     // inject the current user into the frontend
