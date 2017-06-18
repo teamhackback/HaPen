@@ -32,14 +32,14 @@ export default class App extends React.Component {
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
         <div className="App">
-          <AppBarTop store={this.props.store} />
           <Router>
             <div>
+                <AppBarTop store={this.props.store} />
                 <Switch>
                     <Route exact path="/" component={Home} />
                     <Route path="/login" component={Login} />
                     <PrivateRoute path="/search" component={Search} redirectTo="/login" store={this.props.store} />
-                    <PrivateRoute path="/issue" component={Events} redirectTo="/login" store={this.props.store} />
+                    <PrivateRoute path="/issue/:aid" component={Events} redirectTo="/login" store={this.props.store} />
                 </Switch>
             </div>
           </Router>

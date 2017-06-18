@@ -1,4 +1,8 @@
 import React, {Component} from 'react';
+import {
+  BrowserRouter as Router,
+  Link
+} from 'react-router-dom';
 import TextField from 'material-ui/TextField';
 import superagent from 'superagent';
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
@@ -6,37 +10,33 @@ import FlatButton from 'material-ui/FlatButton';
 import {throttle} from 'lodash';
 const markdown = require('markdown').markdown;
 const moment = require('moment');
+import './styles/Search.scss';
+import PropTypes from 'prop-types';
 
 export class SearchResult extends Component {
   render() {
     return (
       <div>
           {this.props.items.map((item,index)=>(
-            <Card key={item.aid}>
-              <CardHeader
-                title={`Issue ${item.blob.number} - ${item.blob.title}`}
-                subtitle={moment(item.blob.created_at).fromNow()}
-                avatar={item.blob.user.avatar_url}
-                actAsExpander={true}
-                showExpandableButton={true}
-              />
-              <CardActions>
-                <FlatButton label="Take" />
-              </CardActions>
-              <CardText expandable={true}>
-                <div dangerouslySetInnerHTML={{__html: markdown.toHTML(item.blob.body)}}>
-                </div>
-              </CardText>
-            </Card>
+            <Link to={`/issue/${item.aid}`} key={item.aid}>
+              <Card expandable={false}>
+                <CardHeader
+                  title={`Issue ${item.blob.number} - ${item.blob.title}`}
+                  subtitle={moment(item.blob.created_at).fromNow()}
+                  avatar={item.blob.user.avatar_url}
+                />
+              </Card>
+            </Link>
           ))}
       </div>
     );
   }
 };
-export default class Search extends Component {
-	state = {
-		items: []
-	}
+
+class Search extends Component {
+  state = {
+    items: []
+  }
   constructor() {
     super();
     this.apiSearch = throttle((val) => {
@@ -56,11 +56,12 @@ export default class Search extends Component {
   };
   render() {
     return (
-      <div>
+      <div className="search-wrapper">
         <TextField
+          className="search-input"
           onChange={this.onSearch}
           defaultValue=""
-          floatingLabelText="Search"
+          floatingLabelText="Search for issues"
           fullWidth={true}
         />
         <SearchResult items={this.state.items} />
@@ -68,3 +69,9 @@ export default class Search extends Component {
     );
   }
 }
+
+Search.contextTypes = {
+  router: PropTypes.object
+};
+
+export default Search;
