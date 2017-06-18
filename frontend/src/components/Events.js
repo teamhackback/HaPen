@@ -85,23 +85,42 @@ export default class Events extends Component {
           this.setState({
             "events": res.body.events || [],
             "blob": res.body.blob,
-            "avatarUrl": res.body.blob.user.avatar_url
+            "avatarUrl": res.body.blob.user.avatar_url,
+            "taken": res.body.takenAt
           });
         }
       });
-  }
+  };
+  claim = () => {
+    superagent
+      .get(`https://hapen.hackback.tech/api/issues/${this.aid}/take`)
+      .end((err, res) => {
+        console.log(res);
+      });
+  };
 
   render() {
     const assigneeBlock =
-      this.state.blob.assignee ? <div> Assigned to {this.state.blog.assignee} </div> :
         <CardActions>
           <div>
+            { this.state.taken ?
+            <RaisedButton
+              className="awesome-button-wrapper"
+              label="Claimed"
+              primary={true}
+              disabled={true}
+              icon={<FontIcon className="material-icons">motorcycle</FontIcon>}
+            />
+
+                :
             <RaisedButton
               className="awesome-button-wrapper"
               label="Claim"
+              onClick={this.claim}
               primary={true}
               icon={<FontIcon className="material-icons">motorcycle</FontIcon>}
             />
+              }
           </div>
       </CardActions>
     return (
