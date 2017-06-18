@@ -17,6 +17,9 @@ string botToken;
 string githubAPIURL = "https://api.github.com";
 string botName = "hapen1";
 
+import vibe.data.bson : BsonObjectID;
+import vibe.db.mongo.mongo : MongoCollection;
+
 shared static this()
 {
     import std.process : environment;
@@ -24,40 +27,53 @@ shared static this()
     botToken = "token " ~ environment["APP_GITHUB_BOT_TOKEN"];
 }
 
-void githubHook(HTTPServerRequest req, HTTPServerResponse res)
+class GitHub
 {
-    import std.stdio;
-    auto json = verifyRequest(req.headers["X-Hub-Signature"], req.bodyReader.readAllUTF8);
-    auto eventType = req.headers["X-GitHub-Event"];
-    logInfo("Receiving %s from GH", eventType);
-    switch (eventType)
+    MongoCollection m_issues;
+    this(MongoCollection issues)
     {
-    case "ping":
-        return res.writeBody("pong");
-    case "status":
-        return res.writeBody("handled");
-    case "issues":
-        auto issue = json["issue"].deserializeJson!Issue;
-        logDebug("Issue#%s with action:%s", issue.number, json["action"]);
-            //runTask((&updateComment!Issue).toDelegate, &issue);
-        return res.writeBody("handled");
-    case "pull_request":
-        auto action = json["action"].get!string;
-        logDebug("PR#%s with action:%s", json["number"], action);
+        m_issues = issues;
+    }
 
-        switch (action)
+    void hook(HTTPServerRequest req, HTTPServerResponse res)
+    {
+        import std.stdio;
+        auto json = verifyRequest(req.headers["X-Hub-Signature"], req.bodyReader.readAllUTF8);
+        auto eventType = req.headers["X-GitHub-Event"];
+        logInfo("Receiving %s from GH", eventType);
+        switch (eventType)
         {
-            case "unlabeled", "closed", "opened", "reopened", "synchronize", "labeled", "edited":
-                auto pr = json["pull_request"].deserializeJson!PullRequest;
-                // runTask!
-                runTask((&updateComment!PullRequest).toDelegate, &pr);
-                runTask((&workWithPR).toDelegate, &pr);
-                return res.writeBody("handled");
-            default:
-                return res.writeBody("ignored");
+        case "ping":
+            return res.writeBody("pong");
+        case "status":
+            return res.writeBody("handled");
+        case "issues":
+            auto issue = json["issue"].deserializeJson!Issue;
+            logDebug("Issue#%s with action:%s", issue.number, json["action"]);
+            static struct Foo {
+                BsonObjectID id;
+            }
+            auto doc = Foo();
+            m_issues.insert(doc);
+                //runTask((&updateComment!Issue).toDelegate, &issue);
+            return res.writeBody("handled");
+        case "pull_request":
+            auto action = json["action"].get!string;
+            logDebug("PR#%s with action:%s", json["number"], action);
+            switch (action)
+            {
+                case "unlabeled", "closed", "opened", "reopened", "synchronize", "labeled", "edited":
+                    auto pr = json["pull_request"].deserializeJson!PullRequest;
+                    // runTask!
+                    runTask((&updateComment!PullRequest).toDelegate, &pr);
+                    runTask((&workWithPR).toDelegate, &pr);
+                    return res.writeBody("handled");
+                default:
+                    return res.writeBody("ignored");
+            }
+        default:
+            return res.writeVoidBody();
         }
-    default:
-        return res.writeVoidBody();
     }
 }
 

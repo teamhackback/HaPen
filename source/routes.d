@@ -10,12 +10,6 @@ void registerAppRoutes(scope URLRouter router)
     import vibe.db.mongo.mongo : connectMongoDB;
     import vibe.db.mongo.settings : MongoClientSettings, MongoAuthMechanism, parseMongoDBUrl;
 
-    import github : githubHook;
-
-    with(router) {
-        post("/api/github_hook", &githubHook);
-    }
-
     // TODO: parse mongo url properly here
     MongoClientSettings mongoSettings;
     auto mongoUrl = environment.get("APP_MONGO_URL", "mongodb://localhost/hapen");
@@ -37,6 +31,16 @@ void registerAppRoutes(scope URLRouter router)
     // TODO: how to initialize controllers?
     import controllers.user : UserController, users;
     users = new UserController(mongoDB);
+
+    //--------------------------------------------------------------------------
+    // Hooks
+    //--------------------------------------------------------------------------
+    import github : GitHub;
+
+    auto gh = new GitHub(mongoDB["issues"]);
+    with(router) {
+        post("/api/github_hook", &gh.hook);
+    }
 
     //--------------------------------------------------------------------------
     // Start API
