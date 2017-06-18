@@ -135,7 +135,9 @@ export default class Events extends Component {
             />
             {assigneeBlock}
             <CardText>
+              { this.state.blob.body  &&
               <div className="markdown-wrapper" dangerouslySetInnerHTML={{ __html: markdown.toHTML(this.state.blob.body) }} />
+              }
             </CardText>
           </Card>)
         }
