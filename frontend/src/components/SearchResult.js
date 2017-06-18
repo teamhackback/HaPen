@@ -14,6 +14,7 @@ export class SearchResult extends Component {
               <CardHeader
                 title={`Issue ${item.blob.number}`}
                 subtitle={item.blob.title}
+                avatar={item.blob.user.avatar_url}
                 actAsExpander={true}
                 showExpandableButton={true}
               />
@@ -36,15 +37,14 @@ export default class Search extends Component {
   constructor() {
     super();
     this.apiSearch = throttle((val) => {
-      console.log("foo");
-    superagent
-      .get(`https://hapen.hackback.tech/api/issues?search=${val}`)
-      .end((err, res) => {
-        if (!(err || !res.ok)) {
-          this.setState({items: res.body});
-        }
-      });
-    }, 100);
+      superagent
+        .get(`https://hapen.hackback.tech/api/issues?search=${val}`)
+        .end((err, res) => {
+          if (!(err || !res.ok)) {
+            this.setState({items: res.body});
+          }
+        });
+      }, 100);
   }
   onSearch = (_, val) => {
     this.apiSearch(val);
