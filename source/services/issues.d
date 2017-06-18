@@ -39,7 +39,7 @@ class Issues
                     arr ~= Bson(["blob.number": Bson((*search).to!long)]);
                 filter["$or"] = Bson(arr);
             }
-            return m_issues.find(filter).map!(deserializeBson!Json).take(15).array;
+            return m_issues.find(filter).sort(["blob.created_at": -1]).take(15).map!(deserializeBson!Json).array;
         }
 
         auto get(string _issueId)
