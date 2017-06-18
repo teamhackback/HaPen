@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+	withRouter,
     Redirect,
 } from 'react-router-dom';
 import Paper from 'material-ui/Paper';
@@ -10,9 +11,14 @@ import ActionAndroid from 'material-ui/svg-icons/action/android';
 import FontIcon from 'material-ui/FontIcon';
 import './styles/Home.scss';
 
-
-
-const Home = () => (
+export class Home extends React.Component {
+  componentWillMount() {
+  	if(window.SESSION_USER) {
+		this.props.history.push("/search")
+	}
+  }
+  render() {
+  return (
     <div className="home">
         <Paper className="paper" style={{textAlign:'center'}} zDepth={0}>
 
@@ -49,6 +55,7 @@ const Home = () => (
 
 
     </div>
-);
-
-export default Home;
+    )
+  }
+};
+export default withRouter(Home);
