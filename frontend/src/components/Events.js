@@ -45,6 +45,7 @@ function PullRequest({data}){
   );
 }
 
+
 export default class Events extends Component {
 	state = {
 		events: [],
@@ -57,7 +58,7 @@ export default class Events extends Component {
       const [aid] = window.location.href.split("/").slice(-1);
       this.aid = aid;
       this.refresh();
-      //setInterval(this.refresh, 200);
+      setInterval(this.refresh, 200);
     // TODO: reduce me to 100
   }
   refresh = () => {
@@ -80,7 +81,7 @@ export default class Events extends Component {
           <div dangerouslySetInnerHTML={{__html: markdown.toHTML(this.state.blob.body)}} />
         </div>
       { this.state.events.map((item, index) =>
-        <div key={index}>
+        <div key={index} className="animated bounceInUp">
           {item.action ? <Action data={item} /> : <PullRequest data={item} /> }
         </div>
       )}

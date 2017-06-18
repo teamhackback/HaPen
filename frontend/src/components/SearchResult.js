@@ -18,8 +18,8 @@ export class SearchResult extends Component {
     return (
       <div>
           {this.props.items.map((item,index)=>(
-            <Link to={`/issue/${item.aid}`} key={item.aid}>
-              <Card expandable={false}>
+            <Link to={`/issue/${item.aid}`} key={item.aid} >
+              <Card expandable={false} className="animated slideInUp">
                 <CardHeader
                   title={`Issue ${item.blob.number} - ${item.blob.title}`}
                   subtitle={moment(item.blob.created_at).fromNow()}
