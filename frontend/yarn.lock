@@ -1025,6 +1025,10 @@ babylon@^6.11.0, babylon@^6.13.0, babylon@^6.17.2:
   version "6.17.3"
   resolved "https://registry.yarnpkg.com/babylon/-/babylon-6.17.3.tgz#1327d709950b558f204e5352587fd0290f8d8e48"
 
+babylonjs@^3.0.4-beta:
+  version "3.0.4-beta"
+  resolved "https://registry.yarnpkg.com/babylonjs/-/babylonjs-3.0.4-beta.tgz#9e8cf950fe1299fd792af116c67478ae3f16d803"
+
 balanced-match@^0.4.2:
   version "0.4.2"
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-0.4.2.tgz#cb3f3e3c732dc0f01ee70b403f302e61d7709838"
