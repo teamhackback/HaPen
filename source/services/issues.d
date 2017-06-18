@@ -34,11 +34,10 @@ class Issues
                     "$options": Bson("i")
                 ]);
                 import std.ascii : isDigit;
-                Bson numeric = Bson.emptyObject;
+                auto arr = [Bson(["blob.body": searchQuery]), Bson(["blob.title": searchQuery])];
                 if ((*search).all!isDigit)
-                    numeric = Bson(["blob.number": Bson((*search).to!long)]);
-                Bson or = [Bson(["blob.body": searchQuery]), Bson(["blob.title": searchQuery]), numeric];
-                filter["$or"] = or;
+                    arr ~= Bson(["blob.number": Bson((*search).to!long)]);
+                filter["$or"] = Bson(arr);
             }
             return m_issues.find(filter).map!(deserializeBson!Json).take(15).array;
         }
