@@ -82,7 +82,12 @@ export default class Issue extends Component {
                                     <p>
                                         <b>{moment(event.issue.created_at).fromNow()}</b>
                                         {event.issue.title}
-                                        <div className={(event.issue.state==='open'?'APPROVED':'NORMAL') + '-stamp'}>
+                                        <div className={(event.issue.state==='open'?'APPROVED':'NORMAL') + '-stamp'}
+                                        style={{
+                                            transform: event.issue.state==='open'?`rotate(${Math.ceil(Math.random()*360)}deg)`:undefined
+                                        }}
+
+                                        >
                                             {event.issue.state==='open'?'APPROVED':'NORMAL'}
                                         </div>
                                     </p>

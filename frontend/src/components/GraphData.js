@@ -1,3 +1,37 @@
+function createRandomGroup(){
+    return(Math.ceil(Math.random()*3));
+}
+
+let nodes=[{id:'origin',group:createRandomGroup()}];
+let links=[];
+
+for (let i = 100; i > 0; i--) {
+    nodes.push({"id": 'node'+i, "group": createRandomGroup()});
+}
+
+function createRandomNode() {
+    try {
+        if (Math.random() > 0.8) {
+            return (nodes[Math.ceil(Math.random() * nodes.length) - 1].id);
+        } else {
+            return (links[Math.ceil(Math.random() * links.length) - 1].source);
+        }
+    }catch(error){
+        return nodes[0].id;
+    }
+}
+
+for (let i = 200; i > 0; i--) {
+    links.push({"source": createRandomNode(), "target": createRandomNode(), "value": createRandomGroup()});
+}
+
+
+
+export default {nodes,links}
+
+
+
+/*
 export default {
     "nodes": [
         {"id": "Myriel", "group": 1},
@@ -335,3 +369,4 @@ export default {
         {"source": "Mme.Hucheloup", "target": "Enjolras", "value": 1}
     ]
 };
+    */
