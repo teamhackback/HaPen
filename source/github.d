@@ -151,13 +151,16 @@ class GitHub
 
         import std.regex;
         static re = regex(`(((close|resolve)(s|d)?)|fix(e(s|d))?) #(\d)+`, "i");
-        pr.commits().map!((c){
+        auto commits = pr.commits();
+        logInfo("Commits: %s", commits);
+        commits.map!((c){
             return matchFirst(c.commit.message, re);
         }).filter!(m => !m.empty).map!((m) {
             return m.back.to!long;
         }).map!((issue) {
             return text(pr.repoSlug.replace("/", "_"), "_", issue);
         }).each!((aid) {
+            logInfo("Updating: %s", aid);
             m_issues.update(["aid": aid], [
                 "$push":  [
                     "events": b
