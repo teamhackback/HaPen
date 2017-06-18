@@ -9,18 +9,18 @@ function Action({data}){
   return (
     <Card>
         <CardHeader
-              title={`Issue`}
+              title={`Action: ${data.action}`}
               subtitle={"foo"}
           />
     </Card>
   );
 }
 
-function PullRequest(){
+function PullRequest({data}){
   return (
     <Card>
         <CardHeader
-              title={`PullRequest`}
+              title={`PullRequest: ${data.blob.action}`}
               subtitle={"foo"}
           />
     </Card>
@@ -49,7 +49,10 @@ export default class Events extends Component {
   render() {
     return (
       <div>
-        <FlatButton label="Take" />
+        { this.state.blob.assignee
+            ? <div> Assigned to {this.state.blog.assignee} </div>
+            : <FlatButton label="Take" />
+        }
         <div>
           <div dangerouslySetInnerHTML={{__html: markdown.toHTML(this.state.blob.body)}} />
         </div>
