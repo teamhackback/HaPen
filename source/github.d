@@ -72,6 +72,8 @@ class GitHub
             return res.writeBody("pong");
         case "status":
             return res.writeBody("handled");
+        case "issue_comment":
+            return res.writeBody("tt");
         case "issues":
             //auto issue = json["issue"].deserializeJson!Issue;
             logDebug("Issue#%s with action:%s", json["issue"]["number"], json["action"]);
@@ -86,7 +88,6 @@ class GitHub
             {
                 case "unlabeled", "closed", "opened", "reopened", "synchronize", "labeled", "edited":
                     auto pr = json["pull_request"].deserializeJson!PullRequest;
-                    // runTask!
                     pr.updateComment;
                     pr.workWithPR;
                     return res.writeBody("handled");
@@ -100,6 +101,7 @@ class GitHub
 
     void storeIssue(Json json)
     {
+        logInfo("Sorting info");
         auto id = text(json["repository"]["full_name"].get!string.replace("/", "_"), "_", json["issue"]["number"]);
 
         m_issues.update(["aid": id], [
@@ -111,7 +113,7 @@ class GitHub
 
     void storePR(Json json)
     {
-        auto id = text(json["repository"]["full_name"].get!string.replace("/", "_"), "_", json["issue"]["number"]);
+        auto id = text(json["repository"]["full_name"].get!string.replace("/", "_"), "_", json["number"]);
         m_prs.update(["aid": id], [
             "$set":  [
                 "pr": json

@@ -39,10 +39,17 @@ class Issues
     }
 
     @anyAuth
-    @path("/:offerId/take")
-    auto put(string _offerId, AuthInfo auth)
+    @path("/:issueId/take")
+    auto put(string _issueId, AuthInfo auth)
     {
-        return "b" ~ _offerId.to!string ~ ":" ~ auth.userId;
+        import std.datetime : Clock, DateTime;
+        Bson set;
+        set["takenAt"] = BsonDate(Clock.currTime);
+        set["takeBy"] = auth.userId;
+        m_issues.update(["aid": _issueId], [
+            "$set": set
+        ]);
+        return "ok";
     }
 
     @anyAuth
