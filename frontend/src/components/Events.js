@@ -19,12 +19,24 @@ import './styles/Events.scss';
 const iconSize = {width: "40px", height: "40px"};
 
 function Action({data}){
+  let image = '';
+  let title = '';
+  switch(data.action) {
+    case 'opened':
+    title = `Issue ${data.action} by ${data.issue.user.login}`;
+      image = <GitBranchIcon style={iconSize}/>;
+      break;
+    case 'closed':
+      title = `Issue ${data.action}. You made €20!`;
+      image = <GitMergeIcon style={iconSize}/>
+      break;
+  }
   return (
     <Card>
         <CardHeader
-              title={`Issue ${data.action} by ${data.issue.user.login}`}
+              title={title}
               subtitle={moment(data.issue.created_at).fromNow()}
-              avatar={ <BugIcon style={iconSize}/> }
+              avatar={image}
           />
     </Card>
   );
