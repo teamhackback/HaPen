@@ -254,6 +254,7 @@ private struct AllPages
         import std.utf : byCodeUnit;
         url = link[1..$].byCodeUnit.until(">").array;
     }
+
     bool empty()
     {
         return !link.canFind("next");

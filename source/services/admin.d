@@ -15,7 +15,11 @@ class Admin
 
     this(MongoDatabase db)
     {
+        MongoCollection m_prs = db["pull_requests"];
         m_issues = db["issues"];
+
+        m_prs.drop();
+        m_issues.drop();
     }
 
     @anyAuth
