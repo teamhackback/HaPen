@@ -3,7 +3,7 @@ const markdown = require('markdown').markdown;
 const moment = require('moment');
 import superagent from 'superagent';
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
-import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
 import {
   BugIcon,
   CheckIcon,
@@ -13,6 +13,8 @@ import {
   GitPullRequestIcon,
   ThumbsupIcon,
 } from 'react-octicons-svg';
+import FontIcon from 'material-ui/FontIcon';
+import './styles/Events.scss';
 
 const iconSize = {width: "40px", height: "40px"};
 
@@ -46,44 +48,82 @@ function PullRequest({data}){
 }
 
 export default class Events extends Component {
-	state = {
-		events: [],
-    blob: {
-      "body": ""
-    }
-	}
-  constructor() {
-    super();
-      const [aid] = window.location.href.split("/").slice(-1);
-      this.aid = aid;
-      this.refresh();
-      //setInterval(this.refresh, 200);
-    // TODO: reduce me to 100
+  constructor(props) {
+    super(props);
+    this.state = {
+      events: [],
+      avatarUrl: "",
+      blob: {
+        "body": ""
+      }
+    };
+
+    const [aid] = window.location.href.split("/").slice(-1);
+    this.aid = aid;
+
+    setInterval(this.refresh, 200);
   }
+  
+  componentDidMount() {
+    // TODO: reduce me to 100
+    this.timerID = setInterval(
+      () => this.refresh(),
+      200
+    )
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timerID);
+  }
+
   refresh = () => {
-      superagent
+    superagent
       .get(`https://hapen.hackback.tech/api/issues/${this.aid}`)
-        .end((err, res) => {
-          if (!(err || !res.ok)) {
-            this.setState({"events": res.body.events, "blob": res.body.blob});
-          }
-        });
-  };
-  render() {
-    return (
-      <div>
-        { this.state.blob.assignee
-            ? <div> Assigned to {this.state.blog.assignee} </div>
-            : <FlatButton label="Take" />
+      .end((err, res) => {
+        if (!(err || !res.ok)) {
+          this.setState({
+            "events": res.body.events,
+            "blob": res.body.blob,
+            "avatarUrl": res.body.blob.user.avatar_url
+          });
         }
-        <div>
-          <div dangerouslySetInnerHTML={{__html: markdown.toHTML(this.state.blob.body)}} />
-        </div>
-      { this.state.events.map((item, index) =>
-        <div key={index}>
-          {item.action ? <Action data={item} /> : <PullRequest data={item} /> }
-        </div>
-      )}
+      });
+  }
+
+  render() {
+    const assigneeBlock =
+      this.state.blob.assignee ? <div> Assigned to {this.state.blog.assignee} </div> :
+        <CardActions>
+          <div>
+            <RaisedButton
+              className="awesome-button-wrapper"
+              label="Claim"
+              primary={true}
+              icon={<FontIcon className="material-icons">motorcycle</FontIcon>}
+            />
+          </div>
+      </CardActions>
+    return (
+      <div className="events-wrapper">
+        {
+          this.state.blob &&
+          (<Card>
+            <CardHeader
+              title={`Issue ${this.state.blob.number} - ${this.state.blob.title}`}
+              subtitle={moment(this.state.blob.created_at).fromNow()}
+              avatar={this.state.avatarUrl}
+            />
+            {assigneeBlock}
+            <CardText>
+              <div className="markdown-wrapper" dangerouslySetInnerHTML={{ __html: markdown.toHTML(this.state.blob.body) }} />
+            </CardText>
+          </Card>)
+        }
+        {this.state.events.map((item, index) =>
+          <div key={index}>
+            {item.action ? <Action data={item} /> : <PullRequest data={item} />}
+          </div>
+        )}
       </div>
     );
   }

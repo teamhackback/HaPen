@@ -10,7 +10,7 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import {grey900} from 'material-ui/styles/colors';
 
 import Home from './Home';
-import Events from './Events';
+import Events from './Events.js';
 import Login from './Login';
 import Search from './SearchResult';
 
