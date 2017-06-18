@@ -111,13 +111,18 @@ class GitHub
     {
         logInfo("Sorting info");
         auto id = text(json["repository"]["full_name"].get!string.replace("/", "_"), "_", json["issue"]["number"]);
-
-
-        m_issues.update(["aid": id], [
+        auto obj = [
             "$push":  [
                 "events": json
             ]
-        ], UpdateFlags.upsert);
+        ];
+        if (auto k = "issue" in json)
+        {
+            obj["$set"] = [
+                "blob": *k
+            ];
+        }
+        m_issues.update(["aid": id], obj, UpdateFlags.upsert);
     }
 
     void storePR(Json json, PullRequest pr)
