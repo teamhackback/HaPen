@@ -24,7 +24,7 @@ string githubAPIURL = "https://api.github.com";
 string botName = "hapen1";
 string slackHook;
 
-import vibe.data.bson : Bson, BsonObjectID, serializeToBson;
+import vibe.data.bson : Bson, BsonDate, BsonObjectID, serializeToBson;
 import vibe.db.mongo.mongo : MongoCollection;
 import vibe.db.mongo.database : MongoDatabase;
 import vibe.db.mongo.flags : UpdateFlags, IndexFlags;
@@ -123,6 +123,7 @@ class GitHub
     {
         logInfo("Sorting info");
         auto id = text(json["repository"]["full_name"].get!string.replace("/", "_"), "_", json["issue"]["number"]);
+        json["insertedAt"] = Clock.currTime().toISOExtString;
         auto obj = [
             "$push":  [
                 "events": json
@@ -143,6 +144,7 @@ class GitHub
         Bson b = Bson.emptyObject;
         b["sha"] = pr.head.sha;
         b["blob"] = json;
+        b["insertedAt"] = BsonDate(Clock.currTime);
         m_prs.update(["aid": id], [
             "$set":  b
         ], UpdateFlags.upsert);
