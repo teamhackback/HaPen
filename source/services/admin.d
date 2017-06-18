@@ -25,12 +25,15 @@ class Admin
     {
         import std.stdio;
         import github : ApiIssue;
-        string[] repoSlugs = ["sorin-ionescu/prezto", "eHaPen/amazing-repo"];
+        //string[] repoSlugs = ["sorin-ionescu/prezto", "eHaPen/amazing-repo"];
 
-        //string[] repoSlugs = ["sorin-ionescu/prezto", "eHaPen/amazing-repo", "dlang/dub", "dlang/dub-registry",
-                              //"rejectedsoftware/vibe.d", "gnunn1/tilix", "dlang-tour/core", "ldc-developers/ldc",
-                              //"rmarquis/pacaur", "libmir/mir", "dlang-community/dscanner", "neovim/neovim",
-                              //"PhilippeSigaud/Pegged", "dlang-community/DCD"];
+        string[] repoSlugs = [
+                              "sorin-ionescu/prezto", "eHaPen/amazing-repo", "dlang/dub", "dlang/dub-registry",
+                              "rejectedsoftware/vibe.d", "gnunn1/tilix", "dlang-tour/core", "ldc-developers/ldc",
+                              "rmarquis/pacaur",
+                               "libmir/mir",
+                               "dlang-community/D-scanner", "neovim/neovim",
+                              "PhilippeSigaud/Pegged", "dlang-community/DCD"];
 
         m_prs.drop();
         m_issues.drop();
@@ -49,7 +52,7 @@ class Admin
 
             foreach (issue; pages.joiner.filter!(a => "pull_request" !in a))
             {
-                auto aid = text(repoSlug.replace("_", "/"), "_", issue["number"]);
+                auto aid = text(repoSlug.replace("/", "_"), "_", issue["number"]);
                 m_issues.update(["aid": aid], [
                     "$set":  [
                         "blob": issue
