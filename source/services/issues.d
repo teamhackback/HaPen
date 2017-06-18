@@ -26,7 +26,7 @@ class Issues
         auto index()
         {
             //return m_issues.find(Bson.emptyObject).map!(deserializeBson!Offer).array;
-            return m_issues.find(Bson.emptyObject);
+            return m_issues.find(Bson.emptyObject).map!(deserializeBson!Json).array;
         }
 
         auto get(BsonObjectID _issueId)
@@ -34,7 +34,7 @@ class Issues
             //auto issue = m_issues.findOne!Issue(["_id": _issueId]);
             //enforceHTTP(!offer.isNull, notFound);
             //return offer.get;
-            return _issueId;
+            return "a";
         }
     }
 
