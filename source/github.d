@@ -205,7 +205,10 @@ auto getBotComment(R)(in ref R r)
 void updateComment(R)(R r)
 {
     auto comment = r.getBotComment();
-    string msg = "Hello world" ~ Clock.currTime.toString();
+    string msg = `
+## Thank you for submitting this pull request!
+<img style="margin: 0 auto;" src="https://user-images.githubusercontent.com/4370550/27257985-f81e9b24-53ec-11e7-8ebf-03a8c47f0e02.png" />
+    `;
     if (comment.isNull) {
         GHComment.post(r, msg);
     } else {
