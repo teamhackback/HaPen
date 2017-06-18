@@ -29,12 +29,13 @@ class App extends Component {
 
 
                     <AppBar
-                        title={<div>HAPEN</div>}
+                        title="HAPEN"
+                        style={{color:'black'}}
                         iconElementLeft={<img src="/logo.png" className="logo" alt="HaPen logo"/>}
                         iconElementRight={<div>
 
-                            <FlatButton icon={<i className="fa fa-calendar" aria-hidden="true"></i>} label="Issues" onClick={()=>store.setCurrentProject(-1)} />
-                            <FlatButton icon={<i className="fa fa-list" aria-hidden="true"></i>} label="Projects" onClick={()=>store.toggleProjectsBar()} />
+                            <FlatButton icon={<i className="fa fa-calendar" aria-hidden="true"></i>} label={`Issues(${store.issue.events.length})`} onClick={()=>store.setCurrentProject(-1)} />
+                            <FlatButton icon={<i className="fa fa-list" aria-hidden="true"></i>} label={`Projects(${store.projects.length})`} onClick={()=>store.toggleProjectsBar()} />
                             <FlatButton icon={<i className="fa fa-plus" aria-hidden="true"></i>} label="New Project" onClick={()=>store.createNewProject()} />
 
 

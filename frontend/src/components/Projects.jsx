@@ -15,7 +15,7 @@ export default class Projects extends Component {
             <Drawer open={()=>{}}>
 
                 {store.projects.map((project,index)=>
-                    <MenuItem onClick={()=>store.setCurrentProject(index)}>{project.name}</MenuItem>)}
+                    <MenuItem icon={<i className="fa fa-book" aria-hidden="true"></i>} onClick={()=>store.setCurrentProject(index)}>{project.name}</MenuItem>)}
             </Drawer>
 
         )
