@@ -150,7 +150,7 @@ class GitHub
         ], UpdateFlags.upsert);
 
         import std.regex;
-        static re = regex(`(((close|resolve)(s|d)?)|fix(e(s|d))?) #(\d)+`, "i");
+        static re = regex(`(((close|resolve)(s|d)?)|fix(e(s|d))?) #(\d+)`, "i");
         auto commits = pr.commits();
         logInfo("Commits: %s", commits);
         commits.map!((c){
