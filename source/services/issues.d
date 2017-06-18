@@ -31,10 +31,10 @@ class Issues
 
         auto get(BsonObjectID _issueId)
         {
-            //auto issue = m_issues.findOne!Issue(["_id": _issueId]);
-            //enforceHTTP(!offer.isNull, notFound);
-            //return offer.get;
-            return "a";
+            Json json;
+            if (auto b = m_issues.findOne(["aid": _issueId]))
+                json = b.deserializeBson!Json;
+            return json;
         }
     }
 
@@ -43,28 +43,19 @@ class Issues
     auto put(string _issueId, AuthInfo auth)
     {
         import std.datetime : Clock, DateTime;
-        Bson set;
-        set["takenAt"] = BsonDate(Clock.currTime);
-        set["takeBy"] = auth.userId;
-        m_issues.update(["aid": _issueId], [
-            "$set": set
-        ]);
-        return "ok";
-    }
 
-    @anyAuth
-    @path("/:offerId/take")
-    auto get(string _offerId, AuthInfo auth)
-    {
-        return "b" ~ _offerId.to!string ~ ":" ~ auth.userId;
+        if (auto b = m_issues.findOne(["aid": _issueId]))
+        {
+            if (!b.tryIndex("takenBy").isNull) {
+                enforceHTTP(0, HTTPStatus.forbidden, "Invalid item");
+            }
+            Bson set;
+            set["takenAt"] = BsonDate(Clock.currTime);
+            set["takeBy"] = auth.userId;
+            m_issues.update(["aid": _issueId], [
+                "$set": set
+            ]);
+        }
+        enforceHTTP(0, HTTPStatus.forbidden, "Invalid item");
     }
-
-	//@anyAuth
-    //auto post(Offer offer) @system
-    //{
-        //offer.id = BsonObjectID.generate();
-        //m_offers.insert(offer);
-        //status = 201;
-        //return offer;
-    //}
 }
