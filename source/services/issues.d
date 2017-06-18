@@ -9,6 +9,7 @@ import std.array;
 import std.algorithm;
 import std.conv;
 import std.datetime : DateTime;
+import std.range;
 
 @safe:
 
@@ -23,9 +24,19 @@ class Issues
     }
 
     @noAuth {
-        auto index()
+        auto index(HTTPServerRequest req)
         {
-            return m_issues.find(Bson.emptyObject).map!(deserializeBson!Json).array;
+            Bson filter = Bson.emptyObject;
+            if (auto search = "search" in req.query)
+            {
+                auto searchQuery = Bson([
+                    "$regex": Bson(".*" ~ *search ~".*"),
+                    "$options": Bson("i")
+                ]);
+                Bson or = [Bson(["blob.body": searchQuery]), Bson(["blob.title": searchQuery]), Bson(["blob.number": searchQuery])];
+                filter["$or"] = or;
+            }
+            return m_issues.find(filter).map!(deserializeBson!Json).take(15).array;
         }
 
         auto get(string _issueId)

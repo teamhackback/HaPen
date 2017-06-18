@@ -12,14 +12,12 @@ string githubAPIURL = "https://api.github.com";
 class Admin
 {
     MongoCollection m_issues;
+    MongoCollection m_prs;
 
     this(MongoDatabase db)
     {
-        MongoCollection m_prs = db["pull_requests"];
+        m_prs = db["pull_requests"];
         m_issues = db["issues"];
-
-        m_prs.drop();
-        m_issues.drop();
     }
 
     @anyAuth
@@ -27,7 +25,11 @@ class Admin
     {
         import std.stdio;
         import github : ApiIssue;
-        string[] repoSlugs = ["sorin-ionescu/prezto"];
+        string[] repoSlugs = ["sorin-ionescu/prezto", "eHaPen/amazing-repo"];
+
+        // reset everything before
+        m_prs.drop();
+        m_issues.drop();
 
         foreach (i, repoSlug; repoSlugs)
         {
