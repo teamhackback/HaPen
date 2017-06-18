@@ -22,6 +22,7 @@ string botName = "hapen1";
 import vibe.data.bson : Bson, BsonObjectID, serializeToBson;
 import vibe.db.mongo.mongo : MongoCollection;
 import vibe.db.mongo.database : MongoDatabase;
+import vibe.db.mongo.flags : UpdateFlags, IndexFlags;
 
 shared static this()
 {
@@ -55,6 +56,8 @@ class GitHub
     {
         m_issues = mongoDB["issues"];
         m_prs = mongoDB["pull_requests"];
+	    m_issues.ensureIndex([tuple("aid", 1)], IndexFlags.Unique);
+	    m_prs.ensureIndex([tuple("aid", 1)], IndexFlags.Unique);
     }
 
     void hook(HTTPServerRequest req, HTTPServerResponse res)
@@ -97,20 +100,24 @@ class GitHub
 
     void storeIssue(Json json)
     {
+        auto id = text(json["repository"]["full_name"].get!string.replace("/", "_"), "_", json["issue"]["number"]);
 
-        auto issue = ApiIssue();
-        issue._id = BsonObjectID.generate();
-        issue.events ~= json.serializeToBson;
-        issue.apid = text(json["repository"]["full_name"].get!string.replace("/", "_"), "_", json["issue"]["number"]);
-        m_issues.insert(issue);
+        m_issues.update(["aid": id], [
+            "$push":  [
+                "events": json
+            ]
+        ], UpdateFlags.upsert);
     }
 
     void storePR(Json json)
     {
+        auto id = text(json["repository"]["full_name"].get!string.replace("/", "_"), "_", json["issue"]["number"]);
+        m_prs.update(["aid": id], [
+            "$set":  [
+                "pr": json
+            ]
+        ], UpdateFlags.upsert);
 
-        auto pr = ApiIssue();
-        pr.events ~= json.serializeToBson;
-        m_prs.insert(pr);
     }
 }
 
