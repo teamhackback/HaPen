@@ -9,6 +9,7 @@ import Timeline from './Timeline';
 import Setup from './Setup';
 import Project from './Project';
 import Issue from './Issue';
+import Search from './SearchResult';
 import FontIcon from 'material-ui/FontIcon';
 import './App.scss';
 
@@ -43,6 +44,8 @@ class App extends Component {
 								: <a href="https://hapen.hackback.tech/api/user/login/github">Login</a>}
                         </div>}
                     />
+
+					<Search />
 
 
                     {store.projects_bar?<Projects store={store}/>:undefined}
