@@ -16,7 +16,7 @@ import Avatar from 'material-ui/Avatar';
 import Paper from 'material-ui/Paper';
 import {List, ListItem} from 'material-ui/List';
 import moment from 'moment';
-import  './Issue.scss';
+import  './styles/Issue.scss';
 
 
 import superagent from 'superagent';
