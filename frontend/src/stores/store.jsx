@@ -1,23 +1,13 @@
 import {observable, computed, autorun} from 'mobx';
 import superagent from 'superagent';
-import superagentPromise from 'superagent-promise';
-var agent = superagentPromise(superagent, Promise);
+//import superagentPromise from 'superagent-promise';
+//var agent = superagentPromise(superagent, Promise);
 
 class ObservableAppStore {
     constructor() {
         autorun(() => console.log(this.report));
 
         const self = this;
-        agent('GET','https://hapen.hackback.tech/api/issues/').then((response)=>{
-
-            const data = JSON.parse(response.text);
-            //console.log(data);
-
-            self.issue=data[2];
-            //self.events = data[2].events;
-
-        })
-
     }
 
     @observable issue = {events:[]};
