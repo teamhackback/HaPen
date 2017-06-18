@@ -15,6 +15,11 @@ shared static this()
 
     auto router = new URLRouter;
 
+    // CORS
+    router.any("/api/*", delegate void(scope HTTPServerRequest req, scope HTTPServerResponse res) {
+        res.headers["Access-Control-Allow-Origin"] = "*";
+    });
+
     router.registerOAuth;
     router.registerAppRoutes();
 

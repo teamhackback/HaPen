@@ -83,6 +83,7 @@ class GitHub
             Json[] events;
         }
         auto issue = Issue();
+        issue._id = BsonObjectID.generate();
         issue.events ~= json;
         m_issues.insert(issue);
     }
