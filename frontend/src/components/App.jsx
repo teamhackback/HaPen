@@ -8,10 +8,11 @@ import {
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import Home from './Home';
-import PrivateRoute from './PrivateRoute';
-import Search from './Search';
 import Issue from './Issue';
 import Login from './Login';
+import Search from './SearchResult';
+
+import PrivateRoute from './PrivateRoute';
 import AppBarTop from './AppBarTop';
 import './styles/App.scss';
 
@@ -31,7 +32,7 @@ export default class App extends React.Component {
             </div>
           </Router>
         </div>
-            </MuiThemeProvider>
-        );
-    }
+      </MuiThemeProvider>
+    );
+  }
 }

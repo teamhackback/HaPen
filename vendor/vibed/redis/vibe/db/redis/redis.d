@@ -1488,7 +1488,10 @@ private final class RedisConnection {
 
 	void setAuth(string password)
 	{
-		if (m_password == password) return;
+		if (password.length == 0)
+			return;
+		// always require redis to send AUTH
+		//if (m_password == password) return;
 		_request_reply(this, "AUTH", password);
 		m_password = password;
 	}

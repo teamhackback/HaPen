@@ -33,7 +33,11 @@ class Issues
                     "$regex": Bson(".*" ~ *search ~".*"),
                     "$options": Bson("i")
                 ]);
-                Bson or = [Bson(["blob.body": searchQuery]), Bson(["blob.title": searchQuery]), Bson(["blob.number": searchQuery])];
+                import std.ascii : isDigit;
+                Bson numeric = Bson.emptyObject;
+                if ((*search).all!isDigit)
+                    numeric = Bson(["blob.number": Bson((*search).to!long)]);
+                Bson or = [Bson(["blob.body": searchQuery]), Bson(["blob.title": searchQuery]), numeric];
                 filter["$or"] = or;
             }
             return m_issues.find(filter).map!(deserializeBson!Json).take(15).array;
