@@ -28,10 +28,11 @@ class Issues
             return m_issues.find(Bson.emptyObject).map!(deserializeBson!Json).array;
         }
 
-        auto get(BsonObjectID _issueId)
+        auto get(string _issueId)
         {
             Json json;
-            if (auto b = m_issues.findOne(["aid": _issueId]))
+            auto b = m_issues.findOne(["aid": _issueId]);
+            if (b.length > 0)
                 json = b.deserializeBson!Json;
             return json;
         }
@@ -39,22 +40,28 @@ class Issues
 
     @anyAuth
     @path("/:issueId/take")
-    auto put(string _issueId, AuthInfo auth)
+    auto get(string _issueId, AuthInfo auth)
     {
         import std.datetime : Clock, DateTime;
 
-        if (auto b = m_issues.findOne(["aid": _issueId]))
+        import std.stdio;
+        writeln("_issueId: ", _issueId);
+        auto b = m_issues.findOne(["aid": _issueId]);
+        writeln(b.length);
+        if (b.length > 0)
         {
             if (!b.tryIndex("takenBy").isNull) {
-                enforceHTTP(0, HTTPStatus.forbidden, "Invalid item");
+                enforceHTTP(0, HTTPStatus.badRequest, "already assigned");
             }
-            Bson set;
+            Bson set = Bson.emptyObject;
             set["takenAt"] = BsonDate(Clock.currTime);
-            set["takeBy"] = auth.userId;
+            set["takenBy"] = auth.userId;
             m_issues.update(["aid": _issueId], [
                 "$set": set
             ]);
+        } else {
+            enforceHTTP(0, HTTPStatus.notFound, "Invalid item");
         }
-        enforceHTTP(0, HTTPStatus.forbidden, "Invalid item");
+        return "ok";
     }
 }

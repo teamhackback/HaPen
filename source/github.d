@@ -77,7 +77,7 @@ class GitHub
         case "status":
             return res.writeBody("handled");
         case "issue_comment":
-            return res.writeBody("tt");
+            return res.writeBody("ok");
         case "issues":
             //auto issue = json["issue"].deserializeJson!Issue;
             logDebug("Issue#%s with action:%s", json["issue"]["number"], json["action"]);
@@ -107,6 +107,7 @@ class GitHub
     {
         logInfo("Sorting info");
         auto id = text(json["repository"]["full_name"].get!string.replace("/", "_"), "_", json["issue"]["number"]);
+
 
         m_issues.update(["aid": id], [
             "$push":  [
