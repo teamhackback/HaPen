@@ -8,8 +8,10 @@ import std.format;
 import vibe.core.log;
 import vibe.core.core : runTask;
 import std.functional : toDelegate;
+import std.string : replace;
 
 import std.algorithm;
+import std.conv : text;
 import std.typecons;
 
 string hookSecret;
@@ -17,7 +19,7 @@ string botToken;
 string githubAPIURL = "https://api.github.com";
 string botName = "hapen1";
 
-import vibe.data.bson : Bson, BsonObjectID;
+import vibe.data.bson : Bson, BsonObjectID, serializeToBson;
 import vibe.db.mongo.mongo : MongoCollection;
 import vibe.db.mongo.database : MongoDatabase;
 
@@ -26,6 +28,23 @@ shared static this()
     import std.process : environment;
     hookSecret = environment["APP_GITHUB_HOOK_SECRET"];
     botToken = "token " ~ environment["APP_GITHUB_BOT_TOKEN"];
+}
+
+static struct ApiIssue {
+    BsonObjectID _id;
+    Bson[] events;
+    Bson blob;
+    string apid;
+    enum Status {closed, open}
+    Status status;
+    DateTime takenAt;
+    double value = 0;
+    ApiPullRequest[] pullRequests;
+}
+static struct ApiPullRequest {
+    BsonObjectID _id;
+    string apid;
+    Bson[] events;
 }
 
 class GitHub
@@ -78,24 +97,19 @@ class GitHub
 
     void storeIssue(Json json)
     {
-        static struct Issue {
-            BsonObjectID _id;
-            Json[] events;
-        }
-        auto issue = Issue();
+
+        auto issue = ApiIssue();
         issue._id = BsonObjectID.generate();
-        issue.events ~= json;
+        issue.events ~= json.serializeToBson;
+        issue.apid = text(json["repository"]["full_name"].get!string.replace("/", "_"), "_", json["issue"]["number"]);
         m_issues.insert(issue);
     }
 
     void storePR(Json json)
     {
-        static struct PR {
-            BsonObjectID _id;
-            Json[] events;
-        }
-        auto pr = PR();
-        pr.events ~= json;
+
+        auto pr = ApiIssue();
+        pr.events ~= json.serializeToBson;
         m_prs.insert(pr);
     }
 }
