@@ -101,8 +101,8 @@ class GitHub
                         requestHTTP(slackHook, (scope req) {
                             req.method = HTTPMethod.POST;
                             req.writeJsonBody([
-                                "text": pr.user.login ~ " just got an Open Source contribution merged. Wow!!\n" ~pr.htmlURL ~"\n"~
-                                        "https://hapen.hackback.tech/issue/" ~ pr.repoSlug.replace("/", "_") ~ "_" ~ pr.number.to!string
+                                "text": pr.user.login ~ " just got an Open Source contribution merged. Wow!!\n" ~pr.htmlURL
+                                        //"https://hapen.hackback.tech/issue/" ~ pr.repoSlug.replace("/", "_") ~ "_" ~ pr.number.to!string
                             ]);
                         });
                     }
