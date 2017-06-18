@@ -37,15 +37,19 @@ export default class Events extends Component {
   constructor() {
     super();
       const [aid] = window.location.href.split("/").slice(-1);
+      this.aid = aid;
+      setInterval(this.refresh, 200);
+    // TODO: reduce me to 100
+  }
+  refresh = () => {
       superagent
-      .get(`https://hapen.hackback.tech/api/issues/${aid}`)
+      .get(`https://hapen.hackback.tech/api/issues/${this.aid}`)
         .end((err, res) => {
           if (!(err || !res.ok)) {
             this.setState({"events": res.body.events, "blob": res.body.blob});
-            console.log(res.body);
           }
         });
-  }
+  };
   render() {
     return (
       <div>
