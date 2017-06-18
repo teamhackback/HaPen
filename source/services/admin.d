@@ -25,7 +25,10 @@ class Admin
     {
         import std.stdio;
         import github : ApiIssue;
-        string[] repoSlugs = ["sorin-ionescu/prezto", "eHaPen/amazing-repo"];
+        string[] repoSlugs = ["sorin-ionescu/prezto", "eHaPen/amazing-repo", "dlang/dub", "dlang/dub-registry",
+                              "rejectedsoftware/vibe.d", "gnunn1/tilix", "dlang-tour/core", "ldc-developers/ldc",
+                              "rmarquis/pacaur", "libmir/mir", "dlang-community/dscanner", "neovim/neovim",
+                              "PhilippeSigaud/Pegged", "dlang-community/DCD"];
 
         // reset everything before
         m_prs.drop();
