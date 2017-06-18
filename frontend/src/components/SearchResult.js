@@ -44,7 +44,9 @@ class Search extends Component {
   }
   constructor() {
     super();
+    this.lastVal = "";
     this.apiSearch = throttle((val) => {
+      this.lastVal = val;
       const filter = !!val ? `?search=${val}` : "";
       superagent
         .get(`https://hapen.hackback.tech/api/issues${filter}`)
@@ -56,6 +58,16 @@ class Search extends Component {
       }, 100);
     this.apiSearch();
   }
+
+  componentDidMount() {
+    this.timerID = setInterval(() => {
+      this.apiSearch(this.lastVal);
+    }, 1000);
+  }
+  componentWillUnmount() {
+    clearInterval(this.timerID);
+  }
+
   onSearch = (_, val) => {
     this.apiSearch(val);
   };
