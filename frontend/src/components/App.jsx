@@ -37,8 +37,10 @@ class App extends Component {
                             <FlatButton icon={<i className="fa fa-calendar" aria-hidden="true"></i>} label={`Issues(${store.issue.events.length})`} onClick={()=>store.setCurrentProject(-1)} />
                             <FlatButton icon={<i className="fa fa-list" aria-hidden="true"></i>} label={`Projects(${store.projects.length})`} onClick={()=>store.toggleProjectsBar()} />
                             <FlatButton icon={<i className="fa fa-plus" aria-hidden="true"></i>} label="New Project" onClick={()=>store.createNewProject()} />
-
-
+							{store.user ? <div>
+									Hi, <span>{store.user.name}</span> <a href="https://hapen.hackback.tech/api/user/logout">Logout</a>
+								</div>
+								: <a href="https://hapen.hackback.tech/api/user/login/github">Login</a>}
                         </div>}
                     />
 

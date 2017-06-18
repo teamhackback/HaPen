@@ -22,7 +22,7 @@ class ObservableAppStore {
 
     @observable issue = {events:[]};
     //@observable events = [];
-    @observable user = null;
+    @observable user = window.SESSION_USER;
     @observable projects_bar = false;
     @observable project_current = -1;
     @observable project_new = null/*{
