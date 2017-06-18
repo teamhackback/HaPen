@@ -3,7 +3,9 @@ import {
   BrowserRouter as Router,
   Link
 } from 'react-router-dom';
+import FontIcon from 'material-ui/FontIcon';
 import Drawer from 'material-ui/Drawer';
+import { Card, CardHeader } from 'material-ui/Card';
 import MenuItem from 'material-ui/MenuItem';
 import { observer } from 'mobx-react';
 import PropTypes from 'prop-types';
@@ -25,10 +27,17 @@ class DrawerMenu extends React.Component {
             {
               this.props.store.user ? (
                 <div>
-                  <Link to='/search'><MenuItem>Search</MenuItem></Link>
-                  <MenuItem onTouchTap={this.handleLogout}>Logout</MenuItem>
+                  <Card>
+                    <CardHeader
+                      title={window.SESSION_USER.name}
+                      subtitle={window.SESSION_USER.email}
+                      avatar={window.SESSION_USER.avatarUrl}
+                    />
+                  </Card>
+                  <MenuItem containerElement={<Link to='/search' />} leftIcon={<FontIcon className="material-icons">search</FontIcon>}>Search</MenuItem>
+                  <MenuItem onTouchTap={this.handleLogout} leftIcon={<FontIcon className="material-icons">exit_to_app</FontIcon>}>Logout</MenuItem>
                 </div>
-              ) : (<MenuItem onTouchTap={this.handleLogin}> Login </MenuItem>)
+              ) : (<MenuItem onTouchTap={this.handleLogin} leftIcon={<FontIcon className="material-icons">face</FontIcon>}> Login </MenuItem>)
             }
           </Drawer>
         </Router>

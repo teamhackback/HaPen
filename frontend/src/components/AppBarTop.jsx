@@ -33,7 +33,7 @@ export default class AppBarTop extends React.Component {
   render() {
     return (
       <div>
-        <AppBar style={{margin: 0}} title="haPen" onLeftIconButtonTouchTap={this.handleDrawerToggle} />
+        <AppBar title="haPen" onLeftIconButtonTouchTap={this.handleDrawerToggle} />
         <DrawerMenu
           store={this.props.store}
           open={this.state.drawerOpen}

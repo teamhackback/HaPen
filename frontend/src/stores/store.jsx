@@ -1,7 +1,4 @@
 import {observable, computed, autorun} from 'mobx';
-import superagent from 'superagent';
-//import superagentPromise from 'superagent-promise';
-//var agent = superagentPromise(superagent, Promise);
 
 class ObservableAppStore {
     constructor() {
