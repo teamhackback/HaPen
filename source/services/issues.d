@@ -39,6 +39,7 @@ class Issues
                     arr ~= Bson(["blob.number": Bson((*search).to!long)]);
                 filter["$or"] = Bson(arr);
             }
+            filter["blob.state"] = "open";
             return m_issues.find(filter).sort(["blob.created_at": -1]).take(15).map!(deserializeBson!Json).array;
         }
 
