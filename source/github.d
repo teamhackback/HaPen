@@ -98,6 +98,10 @@ class GitHub
                 default:
                     return res.writeBody("ignored");
             }
+        case "pull_request_review":
+            auto pr = json["pull_request"].deserializeJson!PullRequest;
+            storePR(json, pr);
+            return res.writeBody("handled");
         default:
             return res.writeVoidBody();
         }
