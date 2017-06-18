@@ -1,11 +1,27 @@
 import {observable, computed, autorun} from 'mobx';
-
+import superagent from 'superagent';
+import superagentPromise from 'superagent-promise';
+var agent = superagentPromise(superagent, Promise);
 
 class ObservableAppStore {
     constructor() {
         autorun(() => console.log(this.report));
+
+        const self = this;
+        agent('GET','https://hapen.hackback.tech/api/issues/').then((response)=>{
+
+            const data = JSON.parse(response.text);
+            //console.log(data);
+
+            self.issue=data[2];
+            //self.events = data[2].events;
+
+        })
+
     }
 
+    @observable issue = {events:[]};
+    //@observable events = [];
     @observable user = null;
     @observable projects_bar = false;
     @observable project_current = -1;
@@ -49,7 +65,7 @@ class ObservableAppStore {
         return this.projects[this.project_current];
     }
 
-    @computed
+    /*@computed
     get
     events() {
         let events = [];
@@ -69,7 +85,7 @@ class ObservableAppStore {
         return events;
 
         //return [].concat(...this.projects.map((project)=>project.events.map((event=>Object.extend({project},event)))));
-    }
+    }*/
 
 
 

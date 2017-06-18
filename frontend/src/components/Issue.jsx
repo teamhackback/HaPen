@@ -19,7 +19,13 @@ import moment from 'moment';
 import  './Issue.scss';
 
 
-let events = [];
+import superagent from 'superagent';
+import superagentPromise from 'superagent-promise';
+var agent = superagentPromise(superagent, Promise);
+
+
+
+/*let events = [];
 
 for (let i = 100; i > 0; i--) {
     events.push({
@@ -29,7 +35,12 @@ for (let i = 100; i > 0; i--) {
         image: 'https://1.gravatar.com/avatar/3d98c15957c5f5dd227e53dbc7cbb60d?s=300&r=pg&d=mm',
         time: new Date(new Date() / 1 - (1000 * 3600 * 24 * 356 * Math.random()))
     });
-}
+}*/
+
+
+
+
+
 
 
 @observer
@@ -37,10 +48,11 @@ export default class Issue extends Component {
     render() {
 
         const store = this.props.store;
+        console.log(store.events);
 
         return (
             <Paper zDepth={0} className="container">
-                <h1>Issue #123456</h1>
+                <h1>Issue #{store.issue._id}</h1>
                 <FlatButton
                     label= "Take this issue!"
                     primary={true}
@@ -48,25 +60,35 @@ export default class Issue extends Component {
                     hoverColor="#8AA62F"
                     style={{color: 'white'}}
                     keyboardFocused={true}
-                    onClick={()=>{}}
+                    onClick={()=>{
+                        agent('PUT',`https://hapen.hackback.tech/api/issues/${store.issue._id}/take`).then(()=>{
+                            alert('It is yours!');
+                        })
+
+                    }}
                 />
                 <List className="list">
 
 
-                    {events.map((event, index)=>(
+                    {store.issue.events.map((event, index)=>(
                         <div key={index} className="item-container">
                             <ListItem
 
-                                leftAvatar={<Avatar src={event.image}/>}
+                                leftAvatar={<Avatar src={'https://1.gravatar.com/avatar/3d98c15957c5f5dd227e53dbc7cbb60d?s=300&r=pg&d=mm'}/>}
                                 //rightIconButton={rightIconMenu}
                                 primaryText={event.author}
-                                className={event.type}
+                                className={event.issue.state==='open'?'APPROVED':'NORMAL'}
                                 secondaryText={
                                     <p>
-                                        <b>{moment(event.time).fromNow()}</b>
-                                        {event.text}
-                                        <div className={event.type + '-stamp'}>
-                                            {event.type}
+                                        <b>{moment(event.issue.created_at).fromNow()}</b>
+                                        {event.issue.title}
+                                        <div className={(event.issue.state==='open'?'APPROVED':'NORMAL') + '-stamp'}
+                                        style={{
+                                            transform: event.issue.state==='open'?`rotate(${Math.ceil(Math.random()*360)}deg)`:undefined
+                                        }}
+
+                                        >
+                                            {event.issue.state==='open'?'APPROVED':'NORMAL'}
                                         </div>
                                     </p>
                                 }
