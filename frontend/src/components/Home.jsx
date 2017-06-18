@@ -4,6 +4,7 @@ import {
 } from 'react-router-dom';
 import Paper from 'material-ui/Paper';
 import TextLogo from '../../public/text-logo.svg';
+import SquareLogo from '../../public/square-logo.svg';
 import RaisedButton from 'material-ui/RaisedButton';
 import ActionAndroid from 'material-ui/svg-icons/action/android';
 import FontIcon from 'material-ui/FontIcon';
@@ -13,9 +14,10 @@ import './styles/Home.scss';
 
 const Home = () => (
     <div className="home">
-        <Paper style={{textAlign:'center'}} zDepth={0}>
+        <Paper className="paper" style={{textAlign:'center'}} zDepth={0}>
 
-            <h1><img src={TextLogo} style={{width: 300}}/></h1>
+            <img src={SquareLogo} style={{width: 200,marginTop:30,borderRadius:500,padding:3,boxShadow:'black 0 0 3px'}}/>
+            <h1>haPen</h1>
             <h2>Everybody <span style={{color:'#999'}}>{'/.*/g'}</span> <span style={{color:'red'}}>♥</span> OpenSource</h2>
 
 

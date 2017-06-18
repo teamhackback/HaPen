@@ -1,5 +1,6 @@
 import React from 'react';
 import AppBar from 'material-ui/AppBar';
+import TextWhiteLogo from '../../public/text-white-logo.svg';
 
 import DrawerMenu from './DrawerMenu';
 
@@ -33,7 +34,7 @@ export default class AppBarTop extends React.Component {
   render() {
     return (
       <div>
-        <AppBar title="haPen" onLeftIconButtonTouchTap={this.handleDrawerToggle} />
+        <AppBar title={<img src={TextWhiteLogo} style={{height:60}} alt="haPen logo"/>} onLeftIconButtonTouchTap={this.handleDrawerToggle} />
         <DrawerMenu
           store={this.props.store}
           open={this.state.drawerOpen}
