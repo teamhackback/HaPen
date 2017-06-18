@@ -22,27 +22,35 @@ function Action({data}){
   return (
     <Card>
         <CardHeader
-              title={`Action: ${data.action}`}
-              subtitle={"foo"}
+              title={`Issue ${data.action} by ${data.issue.user.login}`}
+              subtitle={moment(data.issue.created_at).fromNow()}
+              avatar={ <BugIcon style={iconSize}/> }
           />
-          <BugIcon style={iconSize}/>
-          <GitBranchIcon style={iconSize}/>
-          <GitCommitIcon style={iconSize}/>
-          <ThumbsupIcon style={iconSize}/>
     </Card>
   );
 }
 
 function PullRequest({data}){
+  let image = '';
+  switch(data.blob.action) {
+    case 'opened':
+      image = <GitBranchIcon style={iconSize}/>
+      break;
+    case 'closed':
+      image = <GitPullRequestIcon style={iconSize}/>
+      break;
+    case 'submitted':
+      image = <GitCommitIcon style={iconSize}/>
+      break;
+  }
+  console.log(data);
   return (
     <Card>
         <CardHeader
-              title={`PullRequest: ${data.blob.action}`}
-              subtitle={"foo"}
+            title = {`Pull request ${data.blob.action} by ${data.blob.sender.login}`}
+            subtitle={moment(data.blob.insertedAt).fromNow()}
+            avatar={image}
           />
-          <CheckIcon style={iconSize}/>
-          <GitMergeIcon style={iconSize}/>
-          <GitPullRequestIcon style={iconSize}/>
     </Card>
   );
 }
