@@ -13,7 +13,6 @@ void registerAppRoutes(scope URLRouter router)
     import github : githubHook;
 
     with(router) {
-
         post("/api/github_hook", &githubHook);
     }
 
@@ -39,11 +38,14 @@ void registerAppRoutes(scope URLRouter router)
     import controllers.user : UserController, users;
     users = new UserController(mongoDB);
 
-    import services.offers : Offers;
+    //--------------------------------------------------------------------------
+    // Start API
+    //--------------------------------------------------------------------------
+    import services.issues : Issues;
 
     import hb.web.web : registerWebInterface, WebInterfaceSettings;
     auto userServiceSettings = new WebInterfaceSettings();
     userServiceSettings.urlPrefix = "/api";
     userServiceSettings.ignoreTrailingSlash = true; // true: overloads for trailing /
-    router.registerWebInterface(new Offers(mongoDB), userServiceSettings);
+    router.registerWebInterface(new Issues(mongoDB), userServiceSettings);
 }

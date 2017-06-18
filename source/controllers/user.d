@@ -17,7 +17,6 @@ class UserController
 
         //m_users.ensureIndex([tuple("name", 1)], IndexFlags.unique);
         m_users.ensureIndex([tuple("googleId", 1)], IndexFlags.unique | IndexFlags.sparse);
-        m_users.ensureIndex([tuple("githubId", 1)], IndexFlags.unique | IndexFlags.sparse);
     }
 
     //User getUserById(string id)

@@ -34,6 +34,6 @@ shared static this()
     foreach (route; router.getAllRoutes)
     {
         if ([HTTPMethod.POST, HTTPMethod.GET, HTTPMethod.PUT].canFind(route.method))
-            logDebug("%s: %s", route.pattern, route.method);
+            logInfo("%s: %s", route.pattern, route.method);
     }
 }
