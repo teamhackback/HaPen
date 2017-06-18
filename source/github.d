@@ -15,7 +15,7 @@ import std.functional : toDelegate;
 import std.string : replace;
 
 import std.algorithm;
-import std.conv : text;
+import std.conv : text, to;
 import std.typecons;
 
 string hookSecret;
@@ -126,6 +126,21 @@ class GitHub
             "$set":  b
         ], UpdateFlags.upsert);
 
+        import std.regex;
+        static re = regex(`(((close|resolve)(s|d)?)|fix(e(s|d))?) #(\d)+`, "i");
+        pr.commits().map!((c){
+            return matchFirst(c.commit.message, re);
+        }).filter!(m => !m.empty).map!((m) {
+            return m.back.to!long;
+        }).map!((issue) {
+            return text(pr.repoSlug.replace("/", "_"), "_", issue);
+        }).each!((aid) {
+            m_issues.update(["aid": aid], [
+                "$push":  [
+                    "events": b
+                ]
+            ]);
+        });
     }
 }
 
