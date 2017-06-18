@@ -27,7 +27,6 @@ export class Home extends React.Component {
 
 
             <RaisedButton
-              target='_blank'
               label="Connect with GitHub"
               primary={true}
               style={{ margin: 12 }}
