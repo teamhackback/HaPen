@@ -87,11 +87,11 @@ class GitHub
         case "pull_request":
             auto action = json["action"].get!string;
             logDebug("PR#%s with action:%s", json["number"], action);
-            storePR(json);
             switch (action)
             {
                 case "unlabeled", "closed", "opened", "reopened", "synchronize", "labeled", "edited":
                     auto pr = json["pull_request"].deserializeJson!PullRequest;
+                    storePR(json, pr);
                     pr.updateComment;
                     pr.workWithPR;
                     return res.writeBody("handled");
@@ -115,13 +115,14 @@ class GitHub
         ], UpdateFlags.upsert);
     }
 
-    void storePR(Json json)
+    void storePR(Json json, PullRequest pr)
     {
-        auto id = text(json["repository"]["full_name"].get!string.replace("/", "_"), "_", json["number"]);
+        auto id = text(pr.repoSlug.replace("/", "_"), "_", pr.number);
+        Bson b = Bson.emptyObject;
+        b["sha"] = pr.head.sha;
+        b["blob"] = json;
         m_prs.update(["aid": id], [
-            "$set":  [
-                "pr": json
-            ]
+            "$set":  b
         ], UpdateFlags.upsert);
 
     }

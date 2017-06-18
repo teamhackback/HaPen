@@ -25,7 +25,6 @@ class Issues
     @noAuth {
         auto index()
         {
-            //return m_issues.find(Bson.emptyObject).map!(deserializeBson!Offer).array;
             return m_issues.find(Bson.emptyObject).map!(deserializeBson!Json).array;
         }
 
