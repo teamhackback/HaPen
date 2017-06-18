@@ -83,7 +83,7 @@ export default class Events extends Component {
       .end((err, res) => {
         if (!(err || !res.ok)) {
           this.setState({
-            "events": res.body.events,
+            "events": res.body.events || [],
             "blob": res.body.blob,
             "avatarUrl": res.body.blob.user.avatar_url
           });
